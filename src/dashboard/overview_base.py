@@ -7,6 +7,7 @@ from collections import defaultdict
 import panel as pn
 from panel.template import BootstrapTemplate
 
+from src.dashboard.template import get_custom_template
 from src.general_tools.general_tools import IS_LOCAL, classproperty
 from src.data.shared_cache import SharedCache
 
@@ -37,27 +38,31 @@ class OverviewBase(ABC):
 
     @classmethod
     def run_app(cls):
-        bootstrap = pn.template.bootstrap.BootstrapTemplate(title=cls.app_name)
-        bootstrap.sidebar_width = 230
-
-        # cls.deeplink_content = {k: json.loads(v[0].decode()) for (k, v) in pn.state.session_args.items()}
-        # deep_link_button = pn.widgets.Button(name="deeplink", button_type="primary", sizing_mode="stretch_width")
-        # bootstrap.sidebar.append(deep_link_button)
-
-        def add_app_button(app_name):
-            btn = pn.widgets.Button(name=app_name.replace("_", " "), button_type="primary", sizing_mode="stretch_width")
-            btn.js_on_click(
-                code=f"window.open('//' + location.host + location.pathname.split('/').slice(0, -1).join() + '/{app_name}', '_self');"
-            )
-            bootstrap.sidebar.append(btn)
-
+        # bootstrap = pn.template.bootstrap.BootstrapTemplate(title=cls.app_name)
+        bootstrap = get_custom_template()
+        menu_options = []
         for overview_category, overview_category_overviews in cls.apps.items():
-            if overview_category != OverViewCategory.Home:
-                bootstrap.sidebar.append(pn.pane.Str(overview_category, css_classes=["custon-str-pane"], height=80))
-            for overview_category_overview in overview_category_overviews:
-                add_app_button(overview_category_overview[0])
-
+            if len(overview_category_overviews) == 1:
+                menu_options.append({
+                    "label": overview_category_overviews[0][0],
+                    "href": f"/{overview_category_overviews[0][0]}"
+                })
+            else:
+                items = []
+                for overview_category_overview in overview_category_overviews:
+                    items.append({
+                        "label": overview_category_overview[0],
+                        "href": f"/{overview_category_overview[0]}"
+                    })
+                menu_options.append({
+                    "label": overview_category,
+                    "items": items
+                })
+        bootstrap.add_variable("menu_options", menu_options)
         bootstrap = cls.app_content(bootstrap)
+        return bootstrap
+
+
 
         def get_link_ab_func(a, b):
             def link_func(_):

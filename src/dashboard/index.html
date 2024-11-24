@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <!-- Bootstrap CSS -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+  >
+      <!-- Custom CSS Variables -->
+  <style>
+    :root {
+        --bs-primary: #78B3CE;
+        --bs-primary-rgb: 120, 179, 206;
+        --bs-secondary: #C9E6F0;
+        --bs-secondary-rgb: 201, 230, 240;
+        --bs-success: #77ce93;
+        --bs-success-rgb: 119, 206, 147;
+        --bs-info: #FBF8EF;
+        --bs-info-rgb: 251, 248, 239;
+        --bs-warning: #F96E2A;
+        --bs-warning-rgb: 249, 20, 0;
+        --bs-danger: #f92a4d;
+        --bs-danger-rgb: 249, 42, 77;
+    }
+  </style>
+  <style>
+      :root {
+        /* Primary Color */
+        --bs-primary-h: 199;
+        --bs-primary-s: 47%;
+        --bs-primary-l: 64%;
+        /* Secondary Color */
+        --bs-secondary-h: 195;
+        --bs-secondary-s: 57%;
+        --bs-secondary-l: 86%;
+        /* Success Color */
+        --bs-success-h: 139;
+        --bs-success-s: 47%;
+        --bs-success-l: 64%;
+        /* Info Color */
+        --bs-info-h: 45;
+        --bs-info-s: 5%;
+        --bs-info-l: 96%;
+        /* Warning Color */
+        --bs-warning-h: 20;
+        --bs-warning-s: 95%;
+        --bs-warning-l: 57%;
+        /* Danger Color */
+        --bs-danger-h: 350;
+        --bs-danger-s: 95%;
+        --bs-danger-l: 57%;
+      }
+
+      /* Primary Button */
+      .btn-primary {
+        background-color: hsl(var(--bs-primary-h), var(--bs-primary-s), var(--bs-primary-l)) !important;
+        border-color: hsl(var(--bs-primary-h), var(--bs-primary-s), var(--bs-primary-l)) !important;
+        color: #fff;
+      }
+      .btn-primary:hover,
+      .btn-primary:focus {
+        background-color: hsl(var(--bs-primary-h), var(--bs-primary-s), calc(var(--bs-primary-l) - 10%)) !important;
+        border-color: hsl(var(--bs-primary-h), var(--bs-primary-s), calc(var(--bs-primary-l) - 10%)) !important;
+        color: #fff;
+      }
+      .btn-primary:active {
+        background-color: hsl(var(--bs-primary-h), var(--bs-primary-s), calc(var(--bs-primary-l) - 20%)) !important;
+        border-color: hsl(var(--bs-primary-h), var(--bs-primary-s), calc(var(--bs-primary-l) - 20%)) !important;
+        color: #fff;
+      }
+
+      /* Secondary Button */
+      .btn-secondary {
+        background-color: hsl(var(--bs-secondary-h), var(--bs-secondary-s), var(--bs-secondary-l)) !important;
+        border-color: hsl(var(--bs-secondary-h), var(--bs-secondary-s), var(--bs-secondary-l)) !important;
+        color: #000;
+      }
+      .btn-secondary:hover,
+      .btn-secondary:focus {
+        background-color: hsl(var(--bs-secondary-h), var(--bs-secondary-s), calc(var(--bs-secondary-l) - 10%)) !important;
+        border-color: hsl(var(--bs-secondary-h), var(--bs-secondary-s), calc(var(--bs-secondary-l) - 10%)) !important;
+        color: #000;
+      }
+      .btn-secondary:active {
+        background-color: hsl(var(--bs-secondary-h), var(--bs-secondary-s), calc(var(--bs-secondary-l) - 20%)) !important;
+        border-color: hsl(var(--bs-secondary-h), var(--bs-secondary-s), calc(var(--bs-secondary-l) - 20%)) !important;
+        color: #000;
+      }
+
+      /* Success Button */
+      .btn-success {
+        background-color: hsl(var(--bs-success-h), var(--bs-success-s), var(--bs-success-l)) !important;
+        border-color: hsl(var(--bs-success-h), var(--bs-success-s), var(--bs-success-l)) !important;
+        color: #fff;
+      }
+      .btn-success:hover,
+      .btn-success:focus {
+        background-color: hsl(var(--bs-success-h), var(--bs-success-s), calc(var(--bs-success-l) - 10%)) !important;
+        border-color: hsl(var(--bs-success-h), var(--bs-success-s), calc(var(--bs-success-l) - 10%)) !important;
+        color: #fff;
+      }
+      .btn-success:active {
+        background-color: hsl(var(--bs-success-h), var(--bs-success-s), calc(var(--bs-success-l) - 20%)) !important;
+        border-color: hsl(var(--bs-success-h), var(--bs-success-s), calc(var(--bs-success-l) - 20%)) !important;
+        color: #fff;
+      }
+
+      /* Info Button */
+      .btn-info {
+        background-color: hsl(var(--bs-info-h), var(--bs-info-s), var(--bs-info-l)) !important;
+        border-color: hsl(var(--bs-info-h), var(--bs-info-s), var(--bs-info-l)) !important;
+        color: #000; /* Dark text for better contrast */
+      }
+      .btn-info:hover,
+      .btn-info:focus {
+        background-color: hsl(var(--bs-info-h), var(--bs-info-s), calc(var(--bs-info-l) - 10%)) !important;
+        border-color: hsl(var(--bs-info-h), var(--bs-info-s), calc(var(--bs-info-l) - 10%)) !important;
+        color: #000;
+      }
+      .btn-info:active {
+        background-color: hsl(var(--bs-info-h), var(--bs-info-s), calc(var(--bs-info-l) - 20%)) !important;
+        border-color: hsl(var(--bs-info-h), var(--bs-info-s), calc(var(--bs-info-l) - 20%)) !important;
+        color: #000;
+      }
+
+      /* Warning Button */
+      .btn-warning {
+        background-color: hsl(var(--bs-warning-h), var(--bs-warning-s), var(--bs-warning-l)) !important;
+        border-color: hsl(var(--bs-warning-h), var(--bs-warning-s), var(--bs-warning-l)) !important;
+        color: #fff;
+      }
+      .btn-warning:hover,
+      .btn-warning:focus {
+        background-color: hsl(var(--bs-warning-h), var(--bs-warning-s), calc(var(--bs-warning-l) - 10%)) !important;
+        border-color: hsl(var(--bs-warning-h), var(--bs-warning-s), calc(var(--bs-warning-l) - 10%)) !important;
+        color: #fff;
+      }
+      .btn-warning:active {
+        background-color: hsl(var(--bs-warning-h), var(--bs-warning-s), calc(var(--bs-warning-l) - 20%)) !important;
+        border-color: hsl(var(--bs-warning-h), var(--bs-warning-s), calc(var(--bs-warning-l) - 20%)) !important;
+        color: #fff;
+      }
+
+      /* Danger Button */
+      .btn-danger {
+        background-color: hsl(var(--bs-danger-h), var(--bs-danger-s), var(--bs-danger-l)) !important;
+        border-color: hsl(var(--bs-danger-h), var(--bs-danger-s), var(--bs-danger-l)) !important;
+        color: #fff;
+      }
+      .btn-danger:hover,
+      .btn-danger:focus {
+        background-color: hsl(var(--bs-danger-h), var(--bs-danger-s), calc(var(--bs-danger-l) - 10%)) !important;
+        border-color: hsl(var(--bs-danger-h), var(--bs-danger-s), calc(var(--bs-danger-l) - 10%)) !important;
+        color: #fff;
+      }
+      .btn-danger:active {
+        background-color: hsl(var(--bs-danger-h), var(--bs-danger-s), calc(var(--bs-danger-l) - 20%)) !important;
+        border-color: hsl(var(--bs-danger-h), var(--bs-danger-s), calc(var(--bs-danger-l) - 20%)) !important;
+        color: #fff;
+      }
+    </style>
+
+  <!-- Panel Resources -->
+  {{ resources }}
+  {{ head }}
+</head>
+<body>
+    <div class="container-fluid p-5 bg-primary text-white text-center">
+        <h1>Casper's web.site</h1>
+        <p>Because I had too much time on my hands</p>
+        <ul class="nav nav-pills justify-content-center">
+          {% for item in menu_options %}
+            {% if 'items' not in item %}
+              <!-- Render a simple nav-item -->
+              <li class="nav-item bg-primary">
+                <a class="nav-link text-white" href="{{ item.href }}">{{ item.label }}</a>
+              </li>
+            {% else %}
+              <!-- Render a dropdown nav-item -->
+              <li class="nav-item dropdown bg-primary">
+                <a class="nav-link text-white dropdown-toggle" data-bs-toggle="dropdown" href="#">{{ item.label }}</a>
+                <ul class="dropdown-menu bg-primary">
+                  {% for sub_item in item['items'] %}
+                    <li><a class="dropdown-item bg-primary text-white" href="{{ sub_item.href }}">{{ sub_item.label }}</a></li>
+                  {% endfor %}
+                </ul>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+
+
+    </div>
+
+<!--    <button class="btn btn-primary">Primary Button</button>-->
+<!--<button class="btn btn-secondary">Secondary Button</button>-->
+<!--<button class="btn btn-success">Success Button</button>-->
+<!--<button class="btn btn-info">Info Button</button>-->
+<!--<button class="btn btn-warning">Warning Button</button>-->
+<!--<button class="btn btn-danger">Danger Button</button>-->
+
+
+
+
+
+  {{ roots }}
+  <!-- Bootstrap JS and Dependencies -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+  ></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Panel Scripts -->
+  {{ scripts }}
+</body>
+</html>
