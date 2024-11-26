@@ -1,13 +1,15 @@
 import panel as pn
 
 from src.dashboard.overview_base import OverviewBase, OverViewCategory
+from src.dashboard.template import CustomTemplate
 
 
 class Home(OverviewBase):
     overview_category = OverViewCategory.Home
 
     @classmethod
-    def app_content(cls, bootstrap):
-        print(cls.apps)
-        bootstrap.main.append(pn.Column(pn.widgets.TextInput(value="Test")))
+    def app_content(cls, bootstrap: CustomTemplate) -> CustomTemplate:
+        bootstrap.add_card("Intro")
+        bootstrap.add_container(12)
+        bootstrap.add_text("Hello -- welcome to my website! My name is Casper and I'm a Dutch guy living in Denmark. For those interested in how I made this, check out the 'how it's made' page. For those interested in why I made this, I can't help you. It just kind of happened.")
         return bootstrap

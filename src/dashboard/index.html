@@ -168,8 +168,19 @@
 </head>
 <body>
     <div class="container-fluid p-5 bg-primary text-white text-center">
-        <h1>Casper's web.site</h1>
-        <p>Because I had too much time on my hands</p>
+        <h1 style="font-family: 'Courier New', Courier, monospace;
+           font-weight: bold;
+           letter-spacing: 2px;
+           text-transform: uppercase;">
+          Casper's web.site
+        </h1>
+        <p style="font-family: 'Courier New', Courier, monospace;
+           font-weight: bold;
+           letter-spacing: 2px;
+           text-transform: uppercase;">
+          Because I had too much time on my hands
+        </p>
+        <p></p>
         <ul class="nav nav-pills justify-content-center">
           {% for item in menu_options %}
             {% if 'items' not in item %}
@@ -193,6 +204,51 @@
 
 
     </div>
+    <div class="container-fluid">
+      <div class="row">
+        <!-- Left Margin (1/6th width) -->
+        <div class="col-md-2 sticky-top" style="top: 0; height: 100%; overflow-y: auto;">
+          <nav id="side-navbar" class="navbar navbar-light flex-column">
+            <nav class="nav nav-pills flex-column text-muted">
+              {% for card in cards %}
+                <a class="nav-link text-muted" href="#card-{{ loop.index }}">{{ card.title }}</a>
+              {% endfor %}
+            </nav>
+          </nav>
+        </div>
+
+        <!-- Main Content Area (2/3rd width) -->
+        <div class="col-md-8">
+          {% for card in cards %}
+            <div class="card m-3 shadow-lg justify-content-center" id="card-{{ loop.index }}">
+              <div class="card-header">
+                <h5>{{ card.title }}</h5>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <!-- Loop over containers -->
+                  {% for container in card.containers %}
+                    <div class="col-md-{{ container.width }}">
+                      <!-- Loop over content -->
+                      {% for content in container.content %}
+                        <!-- Render content based on type -->
+                        {% if content.content_type == 'text' %}
+                          <p>{{ content.value }}</p>
+                        {% elif content.content_type == 'image' %}
+                          <img src="{{ content.value }}" class="img-fluid">
+                        {% elif content.content_type == 'panel_component' %}
+                          {{ embed(components[content.component_id]) }}
+                        {% endif %}
+                      {% endfor %}
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+          </div>
+        </div>
+      </div>
 
 <!--    <button class="btn btn-primary">Primary Button</button>-->
 <!--<button class="btn btn-secondary">Secondary Button</button>-->
@@ -205,7 +261,7 @@
 
 
 
-  {{ roots }}
+<!--  {{ roots }}-->
   <!-- Bootstrap JS and Dependencies -->
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
   <script

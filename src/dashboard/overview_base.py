@@ -13,7 +13,8 @@ from src.data.shared_cache import SharedCache
 
 class OverViewCategory:
     Home = "Home"
-    CV = "CV"
+    CV = "Résumé"
+    HowItsMade = "How It's Made"
 
 class OverviewBase(ABC):
     _apps = defaultdict(list)
@@ -42,24 +43,27 @@ class OverviewBase(ABC):
         bootstrap = get_custom_template()
         menu_options = []
         for overview_category, overview_category_overviews in cls.apps.items():
+            # if overview_category_overviews[0][0] == "How_Its_Made":
+            #     overview_category_overviews[0][0] = "How_It's_Made"
             if len(overview_category_overviews) == 1:
                 menu_options.append({
-                    "label": overview_category_overviews[0][0],
+                    "label": str(overview_category).replace("_", " "),
                     "href": f"/{overview_category_overviews[0][0]}"
                 })
             else:
                 items = []
                 for overview_category_overview in overview_category_overviews:
                     items.append({
-                        "label": overview_category_overview[0],
+                        "label": overview_category_overview[0].replace("_", " "),
                         "href": f"/{overview_category_overview[0]}"
                     })
                 menu_options.append({
-                    "label": overview_category,
+                    "label": overview_category.replace("_", " "),
                     "items": items
                 })
         bootstrap.add_variable("menu_options", menu_options)
         bootstrap = cls.app_content(bootstrap)
+        bootstrap.resolve_cards()
         return bootstrap
 
 
