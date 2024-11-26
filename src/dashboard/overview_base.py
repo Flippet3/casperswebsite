@@ -39,6 +39,7 @@ class OverviewBase(ABC):
 
     @classmethod
     def run_app(cls):
+        pn.extension()
         # bootstrap = pn.template.bootstrap.BootstrapTemplate(title=cls.app_name)
         bootstrap = get_custom_template()
         menu_options = []

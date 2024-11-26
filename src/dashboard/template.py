@@ -1,6 +1,10 @@
+import random
+
+from jinja2 import Environment
 import uuid
 
 import panel as pn
+from bokeh.embed import components
 
 from src.general_tools.general_tools import get_base_folder
 
@@ -11,21 +15,33 @@ pn.extension()
 with open(get_base_folder() + "dashboard\\index.html", 'r') as file:
     template_str = file.read()
 
+def embed(root):
+    script, div = components(root.get_root())
+    return f"{div}\n{script}"
 
-class CustomTemplate(pn.Template):
+class CustomTemplate(pn.template.Template):
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, template, *args, **kwargs):
+        # env = Environment()
+        # env.globals['embed'] = embed
+        # template = env.from_string(template)
+        super().__init__(template, *args, **kwargs)
         self.cards = []
         self.components = {}
         self.current_card = None
         self.current_container = None
 
-    def add_card(self, title: str):
+    # def _get_context(self):
+    #     context = super()._get_context()
+    #     context['embed'] = embed_state
+    #     return context
+
+    def add_card(self, title: str, skills=None):
         self.current_container = None
         self.current_card = {
             "title": title,
-            "containers": []
+            "containers": [],
+            "skills": skills or []
         }
         self.cards.append(self.current_card)
 
@@ -55,6 +71,7 @@ class CustomTemplate(pn.Template):
     def add_panel_component(self, component):
         assert self.current_container, "First add a container before adding content"
         component_id = str(uuid.uuid4())
+        component_id = str(int(random.random()*1000))
         self.components[component_id] = component
         self.current_container["content"].append({
             "content_type": "panel_component",
@@ -63,7 +80,8 @@ class CustomTemplate(pn.Template):
 
     def resolve_cards(self):
         self.add_variable("cards", self.cards)
-        self.add_variable("components", self.components)
+        for component_id, component in self.components.items():
+            self.add_panel(component_id, component)
 
 
 

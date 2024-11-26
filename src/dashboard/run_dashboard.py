@@ -20,7 +20,7 @@ def run_dashboard():
     register_overviews()
 
     apps = {app_name: run_app_func for (app_name, run_app_func) in sum(OverviewBase.apps.values(), [])}
-    apps[""] = apps["Home"]
+    apps[""] = apps["Resume"]
 
     if "windows" in system().lower():
         pn.serve(apps, port=5006, threaded=True, websocket_origin="*", redirect="Home")
