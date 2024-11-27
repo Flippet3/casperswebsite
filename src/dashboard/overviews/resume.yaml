@@ -1,7 +1,7 @@
 #file: noinspection YAMLSchemaValidation
 cards:
   - type: education
-    education_type: Masters
+    education_type: Masters - Aerospace Engineering (Honors)
     school: Technical University of Delft
     start: 2018-09-01
     end: 2020-08-01
@@ -17,7 +17,7 @@ cards:
       Full list of courses: Research Methodologies; Experimental Simulations; Rotor / wake Aerodynamics; Flow Measurement Techniques; Bio-inspired Intelligence and learning for Aerospace Applications; Fundamentals of Aero-elasticity; Wind Turbine Design; Wind Turbine Aero-elasticity; Thesis Wind Energy Rotor Design; Engineering Optimisation: Concepts and Applications; Ethics and Engineering for Aerospace Engineering
     skills: [Optimization, Aerodynamics, AI, Python, WTG Knowledge]
   - type: education
-    education_type: Masters
+    education_type: Masters - Wind Turbine Engineering (Honors)
     school: Danish Technical University
     start: 2018-09-01
     end: 2020-08-01
@@ -33,26 +33,25 @@ cards:
       Full list of courses: Computational fluid dynamics; Introduction to Machine Learning and Data Mining; Introduction to Micro Meteorology for Wind Energy; Turbulence Theory; Wind Turbine Measurement Technique; Wind turbine technology and aerodynamics
     skills: [Statistics, Matlab, AI, Electronics, WTG Knowledge]
   - type: education
-    education_type: Bachelors
+    education_type: Bachelors - Aerospace Engineering
     school: Technical University of Delft
     start: 2014-09-01
     end: 2018-08-01
     img_ref: https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fclipground.com%2Fimages%2Ftu-delft-logo-png-4.png&f=1&nofb=1&ipt=5bfd62766e36415691d7fa162fe5628fe1f1077ae860dd3e6f2a9fbb70e45590&ipo=images
     text: >-
       My bachelors was in Aerospace Engineering, targeted towards air- and spaceflight. 
-      I learned about material properties and aerospace design, taking my initial steps towards structural and aerodynamic analysis.
+      During my bachelors, I learned about material properties and aerospace design, taking my initial steps towards structural and aerodynamic analysis.
       I also set-up fundamentals in calculus, linear algebra, probabilities, differential equations, and learned to code in both Matlab and Python.
       <br><br>
       Full list of courses: Aerospace Materials and Structures; Introduction to Aerospace Engineering; Exploring Aerospace Engineering and Design; Engineering Mechanics; Programming and Scientific Computing in Python for AE1; Aerospace Design and Construction; Physics; Aerospace System Design; Aerodynamics Sub- and Supersonic; Structural and Vibrational Analysis and Design; Applied Numerical Analysis and Computational Modelling; Test, Analysis and Simulation; Flight and Orbital Mechanics and Propulsion; Aerospace Signals, Systems and Control; Design Synthesis ; Aerospace Systems Engineering, Design and Production; Aerospace Flight Dynamics, SVV including Flight Test; Calculus II; Linear Algebra; Calculus I; Differential Equations, Probability Theory, and Statistics
     skills: [ Linear Algebra, Calculus, Statistics, Structural Analysis, Aerodynamics, Matlab, Python ]
   - type: education
-    education_type: Minor
+    education_type: Minor - Communication Design for Innovation.
     school: Technical University of Delft
     start: 2016-09-01
     end: 2017-02-01
     img_ref: https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fclipground.com%2Fimages%2Ftu-delft-logo-png-4.png&f=1&nofb=1&ipt=5bfd62766e36415691d7fa162fe5628fe1f1077ae860dd3e6f2a9fbb70e45590&ipo=images
     text: >-
-      My minor was in Communication Design for Innovation.
       Wanting to take a break from the hard-core physics and mathematics involved with Aerospace Engineering, I decided to broaden my horizons in communication studies.
       My philosophy was: Whether you're maneging or being managed, it's always good to be able to communicate clearly.
       Here I learned the common hurdles and pit-falls of communication, and became more aware of my own communication strategy and personality within teams.
@@ -72,19 +71,7 @@ cards:
       <br><br>
       The theses can be found <a href="https://repository.tudelft.nl/record/uuid:ed52186d-40b5-4ded-be97-388ad55d9aad">here</a>.
     skills: [ Statistics, Python, AI, WTG Knowledge ]
-#  - type: project
-#    education_type: Paper
-#    school: Danish Technical University
-#    start: 2020-01-01
-#    end: 2020-08-01
-#    img_ref: https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fbrandslogos.com%2Fwp-content%2Fuploads%2Fimages%2Flarge%2Fdtu-logo.png&f=1&nofb=1&ipt=d57d469b3f48f55109a3e0f0c30ee01095b9f44854f8a7c70489ff3911c951d6&ipo=images
-#    text: >-
-#      Something about the paper that I wrote.
-#      <br><br>
-#      The paper can be found <a href="https://backend.orbit.dtu.dk/ws/files/266089898/1_s2.0_S0167610521003287_main.pdf">here</a>.
-#    skills: [ Statistics, Python, AI, WTG knowledge ]
-
-
+#===========================================
   - type: job
     company: Orsted
     role: Data Modelling Engineer
@@ -119,5 +106,78 @@ cards:
       <br><br>
       Some ad-hoc tasks that I performed were the unpacking of large binary data dumps to easily accessible and optimized data structures, and creating interactive tools towards mapping out the landscape of wind-farm projects.
     skills: [ Linux, WTG Knowledge, Simulink, Data Structure ]
+#===========================================
+  - type: award
+    award: Duke of Edinburgh Award
+    year: 2011-07-01
+    img_ref: https://cgs.gr/wp-content/uploads/2019/05/DOEA_INT_PROUD-TO-DELIVER_ENGLISH_RGB.png
+    text: >-
+      I was awarded the <a href="https://intaward.org/">Duke of Edinburgh Award</a>, for which I had to perform a service (volunteering as a co-trainer at field hockey), improve a skill, participate in physical recreation and go on a hike/camping trip.
+    skills: [ Communication ]
+  - type: award
+    award: Royal Academy of Dutch Sciences Award (Nominated)
+    year: 2013-07-01
+    img_ref: https://framerframed.nl/wp-content/uploads/2022/08/KNAW.png
+    text: >-
+      Nation-wide, thousands of final-year high-school projects are evaluated and 10 are nominated to deserve an award. 
+      My project about annihilation and using anti-matter as rocket fuel was one of those nominations.
+    skills: [ Physics, Simulation ]
+  - type: award
+    award: Design Synthesis Exercise (Nominated)
+    year: 2018-06-01
+    img_ref: https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fclipground.com%2Fimages%2Ftu-delft-logo-png-4.png&f=1&nofb=1&ipt=5bfd62766e36415691d7fa162fe5628fe1f1077ae860dd3e6f2a9fbb70e45590&ipo=images
+    text: >-
+      As a final project of my bachelor's programme, I worked together in a team of 10 engineers.
+      We designed a drone capable of inspecting and repairing small cracks on an aircraft fuselage.
+      I presented in the final symposium of the project where we were rewarded 4th position out of 26.
+    skills: [ Physics, Aerodynamics, Optimization, Structural Analysis, Matlab ]
+#===========================================
+  - type: certificate
+    certificate: Certified Kubernetes Application Developer (CKAD)
+    year: 2023-11-07
+    img_ref: https://bmuschko.com/img/blog/ckad-prep/ckad-logo.png
+    text: >-
+      During my employment at Orsted, I completed a week-long seminar where I learned all about kubernetes. 
+      I then took a CKAD exam, and passed with flying colors, achieving 86% perfect answers above the 66% required to pass.
+    skills: [ Orchestration, Networking ]
+  - type: certificate
+    certificate: Certified SAFe 5 Practitioner
+    year: 2022-10-01
+    img_ref: https://images.credly.com/images/f0adcc07-4388-459f-9b98-9a487ff1e8fd/twitter_thumb_201604_cert_mark_SP_badge_large_300px.png
+    text: >-
+      At the start of my employment at Orsted, I took a course in SAFe methodologies, and completed the certification to become a SAFe practitioner.
+    skills: [ Devops ]
+#===========================================
+  - type: project
+    project: Leading Representative at Student Association
+    year: 2017-07-01
+    img_ref: https://delftschestudentenbond.nl/_nuxt/img/embleem.7dfffad.png
+    text: >-
+      As a final project of my bachelor's programme, I worked together in a team of 10 engineers.
+      We designed a drone capable of inspecting and repairing small cracks on an aircraft fuselage.
+      I presented in the final symposium of the project where we were rewarded 4th position out of 26.
+    skills: [ Communication ]
+  - type: project
+    project: Journal Article
+    year: 2020-10-01
+    img_ref: https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fbrandslogos.com%2Fwp-content%2Fuploads%2Fimages%2Flarge%2Fdtu-logo.png&f=1&nofb=1&ipt=d57d469b3f48f55109a3e0f0c30ee01095b9f44854f8a7c70489ff3911c951d6&ipo=images
+    text: >-
+      After graduating my master's degrees, I worked on and published a journal article. 
+      The article was called: "Drag coefficient and frontal area of a solitary mature tree."
+      This was a continuation of my master's thesis, combining images of a tree with met-mast data to estimate the tree's drag coefficient and better understand wind-tree interaction in general.
+      <br><br>
+      The paper can be found <a href="https://backend.orbit.dtu.dk/ws/files/266089898/1_s2.0_S0167610521003287_main.pdf">here</a>.
+    skills: [ Data Structure, Aerodynamics, statistics, WTG Knowledge, Python ]
+  - type: project
+    project: A year of writing
+    year: 2024-01-01
+    img_ref: https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fassets.stickpng.com%2Fimages%2F580b585b2edbce24c47b27dd.png&f=1&nofb=1&ipt=b60ce4b421f3c468be2c3c6971ff2289ac2afd36f6ab0030da1389c4163bffd9&ipo=images
+    text: >-
+      In January of 2024, I took a sabbatical where I traveled to Australia and spent a year writing.
+      I published a book and wrote two more.
+      During my time as a writer, I've read books by authors and writing teachers, went to writing seminars, and followed writing workshops.
+      This all taught me about story structure, forceful writing, and the power of words.
+      As part of my outgoing personality, I have also performed quite a few stories in front of crowds, and I've loved every second of it.
+    skills: [ Communication ]
 
 

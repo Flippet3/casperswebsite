@@ -14,8 +14,9 @@ class Resume(OverviewBase):
 
     @classmethod
     def app_content(cls, bootstrap: CustomTemplate) -> CustomTemplate:
-        def add_education_card(school: str, education_type: str, start_year: int, end_year: int, img_ref: str, text: str, skills: list[str]):
-            bootstrap.add_card(f"({start_year} - {end_year}) <img src='https://img.icons8.com/?size=24&id=86200&format=png'> {education_type} - {school}", skills=skills)
+
+        def add_card(title: str, text: str, img_ref: str, skills: list[str]):
+            bootstrap.add_card(title, skills=skills)
             bootstrap.add_container(10)
             bootstrap.add_text(text)
             bootstrap.add_container(2)
@@ -23,14 +24,35 @@ class Resume(OverviewBase):
             bootstrap.add_container(12)
             bootstrap.add_text(f"Skills: {', '.join(skills)}")
 
+        def add_education_card(school: str, education_type: str, start_year: int, end_year: int, img_ref: str, text: str, skills: list[str]):
+            add_card(
+                f"({start_year} - {end_year}) <img src='https://img.icons8.com/?size=24&id=86200&format=png'> {education_type} - {school}",
+                text, img_ref, skills
+            )
+
         def add_job_card(company: str, role: str, start_year: int, end_year: int, img_ref: str, text: str, skills: list[str]):
-            bootstrap.add_card(f"({start_year} - {end_year}) <img src='https://img.icons8.com/?size=24&id=xkZW9nXosg6X&format=png'> {company} - {role}", skills=skills)
-            bootstrap.add_container(10)
-            bootstrap.add_text(text)
-            bootstrap.add_container(2)
-            bootstrap.add_image(img_ref)
-            bootstrap.add_container(12)
-            bootstrap.add_text(f"Skills: {', '.join(skills)}")
+            add_card(
+                f"({start_year} - {end_year}) <img src='https://img.icons8.com/?size=24&id=xkZW9nXosg6X&format=png'> {company} - {role}",
+                text, img_ref, skills
+            )
+
+        def add_award_card(award: str, year: int, img_ref: str, text: str, skills: list[str]):
+            add_card(
+                f"({year}) <img src='https://img.icons8.com/?size=24&id=85600&format=png'> {award}",
+                text, img_ref, skills
+            )
+
+        def add_certificate_card(certificate: str, year: int, img_ref: str, text: str, skills: list[str]):
+            add_card(
+                f"({year}) <img src='https://img.icons8.com/?size=24&id=6857&format=png'> {certificate}",
+                text, img_ref, skills
+            )
+
+        def add_project_card(project: str, year: int, img_ref: str, text: str, skills: list[str]):
+            add_card(
+                f"({year}) <img src='https://img.icons8.com/?size=24&id=85878&format=png'> {project}",
+                text, img_ref, skills
+            )
 
         with open(get_base_folder() + "dashboard/overviews/resume.yaml", "r") as o:
             cards = yaml.load(o, yaml.SafeLoader)["cards"]
@@ -72,5 +94,17 @@ class Resume(OverviewBase):
         education_cards = sorted(filter(lambda x: x["type"] == "education", cards), key=lambda x: x["start"], reverse=True)
         for card in education_cards:
             add_education_card(card["school"], card["education_type"], card["start"].year, card["end"].year, card["img_ref"], card["text"], card["skills"])
+
+        certificate_cards = sorted(filter(lambda x: x["type"] == "certificate", cards), key=lambda x: x["year"], reverse=True)
+        for card in certificate_cards:
+            add_certificate_card(card["certificate"], card["year"].year, card["img_ref"], card["text"], card["skills"])
+
+        award_cards = sorted(filter(lambda x: x["type"] == "award", cards), key=lambda x: x["year"], reverse=True)
+        for card in award_cards:
+            add_award_card(card["award"], card["year"].year, card["img_ref"], card["text"], card["skills"])
+
+        project_cards = sorted(filter(lambda x: x["type"] == "project", cards), key=lambda x: x["year"], reverse=True)
+        for card in project_cards:
+            add_project_card(card["project"], card["year"].year, card["img_ref"], card["text"], card["skills"])
 
         return bootstrap

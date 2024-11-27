@@ -10,6 +10,8 @@ class Home(OverviewBase):
     @classmethod
     def app_content(cls, bootstrap: CustomTemplate) -> CustomTemplate:
         bootstrap.add_card("Intro")
-        bootstrap.add_container(12)
+        bootstrap.add_container(6)
         bootstrap.add_text("Hello -- welcome to my website! My name is Casper and I'm a Dutch guy living in Denmark. For those interested in how I made this, check out the 'how it's made' page. For those interested in why I made this, I can't help you. It just kind of happened.")
+        bootstrap.add_container(6)
+        bootstrap.add_image("https://s7.gifyu.com/images/SGR3S.gif")
         return bootstrap
