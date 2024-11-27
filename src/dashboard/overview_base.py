@@ -1,18 +1,18 @@
-import json
 import logging
 from abc import ABC, abstractmethod
 from collections import defaultdict
 
 import panel as pn
-from panel.template import BootstrapTemplate
 
-from dashboard.template import get_custom_template
-from general_tools.general_tools import IS_LOCAL, classproperty
+from dashboard.template import get_custom_template, CustomTemplate
+from general_tools.general_tools import classproperty
+
 
 class OverViewCategory:
     Home = "Home"
     CV = "Résumé"
     HowItsMade = "How It's Made"
+
 
 class OverviewBase(ABC):
     _apps = defaultdict(list)
@@ -37,13 +37,9 @@ class OverviewBase(ABC):
 
     @classmethod
     def run_app(cls):
-        pn.extension()
-        # bootstrap = pn.template.bootstrap.BootstrapTemplate(title=cls.app_name)
         bootstrap = get_custom_template()
         menu_options = []
         for overview_category, overview_category_overviews in cls.apps.items():
-            # if overview_category_overviews[0][0] == "How_Its_Made":
-            #     overview_category_overviews[0][0] = "How_It's_Made"
             if len(overview_category_overviews) == 1:
                 menu_options.append({
                     "label": str(overview_category).replace("_", " "),
@@ -65,33 +61,6 @@ class OverviewBase(ABC):
         bootstrap.resolve_cards()
         return bootstrap
 
-
-
-        def get_link_ab_func(a, b):
-            def link_func(_):
-                a.value = json.dumps(b.value)
-                return link_func
-
-        for key in list(cls.deeplink_content.keys()).copy():
-            if not hasattr(cls.deeplink_content[key], "value"):
-                del cls.deeplink_content[key]
-                continue
-            trigger_widget = cls.deeplink_content[key]
-            implements_value_widget = pn.widgets.TextInput(value=json.dumps(trigger_widget.value), width=0, height=0)
-            cls.deeplink_content[key] = implements_value_widget
-            bootstrap.sidebar.append(implements_value_widget)
-            trigger_widget.param.watch(get_link_ab_func(cls.deeplink_content[key], trigger_widget), ["value"])
-
-            # prepend = "" if IS_LOCAL else "https://"
-            # postpend = "" if not cls.deeplink_content else \
-            #     "'?' + " + " +  '&' + ".join(f"'{key}=' + {key.value}" for key in cls.deeplink_content)
-            # deep_link_button.js_on_click(
-            #     cls.deeplink_content,
-            #     code=f"navigator.clipboard.writeText('{prepend}' + location.host + location.pathname + {postpend});"
-            # )
-
-        return bootstrap
-
     @classmethod
     def register(cls):
         print(f"Registering {cls.app_name}")
@@ -99,7 +68,7 @@ class OverviewBase(ABC):
 
     @classmethod
     @abstractmethod
-    def app_content(cls, bootstrapTemplate) -> BootstrapTemplate:
+    def app_content(cls, bootstrap_template: CustomTemplate) -> CustomTemplate:
         pass
 
     @classmethod
