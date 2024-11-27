@@ -63,14 +63,14 @@ class Resume(OverviewBase):
         bootstrap.add_text("Select the skills here that you are interested in, and, below, you'll only see the cards that are of interest to those specific skills.")
         bootstrap.add_panel_component(multi_choice)
 
-        education_cards = sorted(filter(lambda x: x["type"] == "education", cards), key=lambda x: x["start"], reverse=True)
-        for card in education_cards:
-            add_education_card(card["school"], card["education_type"], card["start"].year, card["end"].year, card["img_ref"], card["text"], card["skills"])
-
         job_cards = sorted(filter(lambda x: x["type"] == "job", cards), key=lambda x: x["start"],
                                  reverse=True)
         for card in job_cards:
             add_job_card(card["company"], card["role"], card["start"].year, card["end"].year,
                                card["img_ref"], card["text"], card["skills"])
+
+        education_cards = sorted(filter(lambda x: x["type"] == "education", cards), key=lambda x: x["start"], reverse=True)
+        for card in education_cards:
+            add_education_card(card["school"], card["education_type"], card["start"].year, card["end"].year, card["img_ref"], card["text"], card["skills"])
 
         return bootstrap

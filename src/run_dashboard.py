@@ -20,10 +20,18 @@ def run_dashboard():
     apps = {app_name: run_app_func for (app_name, run_app_func) in sum(OverviewBase.apps.values(), [])}
     apps[""] = apps["Resume"]  # Set initial site.
 
+    # Manage favicon
+    server_kwargs = dict(
+        port=5006,
+        websocket_origin="*",
+        static_dirs={"assets": "./static"},
+        favicon="assets/favicon.ico"
+    )
+
     if "windows" in system().lower():
-        pn.serve(apps, port=5006, threaded=True, websocket_origin="*", redirect="Home")
+        pn.serve(apps, threaded=True, **server_kwargs)
     else:
-        pn.serve(apps, port=5006, websocket_origin="*", redirect="Home")
+        pn.serve(apps, **server_kwargs)
 
 if __name__ == "__main__":
     run_dashboard()
