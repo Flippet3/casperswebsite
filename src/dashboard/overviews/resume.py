@@ -22,7 +22,7 @@ class Resume(OverviewBase):
             bootstrap.add_container(12)
             bootstrap.add_text(f"Skills: {', '.join(skills)}")
 
-        with open(get_base_folder() + "dashboard\\overviews\\resume.yaml", "r") as o:
+        with open(get_base_folder() + "dashboard/overviews/resume.yaml", "r") as o:
             cards = yaml.load(o, yaml.SafeLoader)["cards"]
 
         all_skills = sorted(set(sum(map(lambda x: x["skills"], cards), [])))

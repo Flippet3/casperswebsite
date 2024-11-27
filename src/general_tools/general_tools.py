@@ -7,7 +7,7 @@ IS_LOCAL = bool(int(os.environ.get("IS_LOCAL", "windows" in system().lower())))
 
 
 def get_base_folder():
-    basepath = os.path.abspath(".").split("casperswebsite")[0] + "casperswebsite\\src\\"
+    basepath = os.path.abspath(".").split("casperswebsite")[0] + "casperswebsite/src/"
     return basepath
 
 

@@ -12,7 +12,7 @@ from general_tools.general_tools import get_base_folder
 pn.extension()
 
 # Read the template file
-with open(get_base_folder() + "dashboard\\index.html", 'r') as file:
+with open(get_base_folder() + "dashboard/index.html", 'r') as file:
     template_str = file.read()
 
 def embed(root):
