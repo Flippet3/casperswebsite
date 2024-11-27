@@ -23,9 +23,9 @@ def run_dashboard():
     apps[""] = apps["Resume"]
 
     if "windows" in system().lower():
-        pn.serve(apps, port=80, threaded=True, websocket_origin="*", redirect="Home")
+        pn.serve(apps, port=5006, threaded=True, websocket_origin="*", redirect="Home")
     else:
-        pn.serve(apps, port=80, websocket_origin="*", redirect="Home")
+        pn.serve(apps, port=5006, websocket_origin="*", redirect="Home")
 
     # if "windows" in system().lower():
     #     pn.serve(apps, port=5006, threaded=True, websocket_origin="*", index=get_base_folder() + "src/dashboard/index.html")
