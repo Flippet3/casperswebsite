@@ -1,6 +1,6 @@
 import panel as pn
 
-from src.dashboard.overview_base import OverviewBase, OverViewCategory
+from dashboard.overview_base import OverviewBase, OverViewCategory
 
 
 class Home2(OverviewBase):

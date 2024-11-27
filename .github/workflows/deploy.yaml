@@ -25,5 +25,10 @@ jobs:
 
       - name: Deploy to Droplet
         run: |
-          ssh flippet3@caspersweb.site 'cd ~/casperswebsite && touch test'
-#          ssh your_username@your_droplet_ip 'cd /path/to/your/project && git pull && systemctl restart your_service'
+#          ssh flippet3@caspersweb.site 'cd ~/casperswebsite && touch test'
+          ssh flippet3@caspersweb.site '
+               cd ~/casperswebsite && 
+               git pull &&
+               tmux send-keys -t dashboard_session C-c &&
+               tmux send-keys -t dashboard_session "python src/dashboard/run_dashboard.py" C-m
+               '

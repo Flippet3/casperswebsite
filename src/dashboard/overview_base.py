@@ -1,5 +1,4 @@
 import json
-import threading
 import logging
 from abc import ABC, abstractmethod
 from collections import defaultdict
@@ -7,9 +6,8 @@ from collections import defaultdict
 import panel as pn
 from panel.template import BootstrapTemplate
 
-from src.dashboard.template import get_custom_template
-from src.general_tools.general_tools import IS_LOCAL, classproperty
-from src.data.shared_cache import SharedCache
+from dashboard.template import get_custom_template
+from general_tools.general_tools import IS_LOCAL, classproperty
 
 class OverViewCategory:
     Home = "Home"

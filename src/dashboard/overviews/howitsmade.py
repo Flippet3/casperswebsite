@@ -1,7 +1,7 @@
 import panel as pn
 
-from src.dashboard.overview_base import OverviewBase, OverViewCategory
-from src.dashboard.template import CustomTemplate
+from dashboard.overview_base import OverviewBase, OverViewCategory
+from dashboard.template import CustomTemplate
 
 
 class HowItsMade(OverviewBase):

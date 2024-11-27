@@ -2,11 +2,10 @@ from datetime import datetime, date
 import yaml
 
 import panel as pn
-from bokeh.models import CustomJS
 
-from src.dashboard.overview_base import OverviewBase, OverViewCategory
-from src.dashboard.template import CustomTemplate
-from src.general_tools.general_tools import get_base_folder
+from dashboard.overview_base import OverviewBase, OverViewCategory
+from dashboard.template import CustomTemplate
+from general_tools.general_tools import get_base_folder
 
 
 class Resume(OverviewBase):
