@@ -167,7 +167,7 @@ cards:
       This was a continuation of my master's thesis, combining images of a tree with met-mast data to estimate the tree's drag coefficient and better understand wind-tree interaction in general.
       <br><br>
       The paper can be found <a href="https://backend.orbit.dtu.dk/ws/files/266089898/1_s2.0_S0167610521003287_main.pdf">here</a>.
-    skills: [ Data Structure, Aerodynamics, statistics, WTG Knowledge, Python ]
+    skills: [ Data Structure, Aerodynamics, Statistics, WTG Knowledge, Python ]
   - type: project
     project: A year of writing
     year: 2024-01-01
