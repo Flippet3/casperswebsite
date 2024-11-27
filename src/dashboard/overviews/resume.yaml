@@ -15,7 +15,7 @@ cards:
       I thoroughly enjoyed my master and had found my stride, as exemplified by the Honors I received during graduation.
       <br><br>
       Full list of courses: Research Methodologies; Experimental Simulations; Rotor / wake Aerodynamics; Flow Measurement Techniques; Bio-inspired Intelligence and learning for Aerospace Applications; Fundamentals of Aero-elasticity; Wind Turbine Design; Wind Turbine Aero-elasticity; Thesis Wind Energy Rotor Design; Engineering Optimisation: Concepts and Applications; Ethics and Engineering for Aerospace Engineering
-    skills: [Optimization, Aerodynamics, AI, Python, WTG knowledge]
+    skills: [Optimization, Aerodynamics, AI, Python, WTG Knowledge]
   - type: education
     education_type: Masters
     school: Danish Technical University
@@ -31,7 +31,7 @@ cards:
       I thoroughly enjoyed my master and had found my stride, as exemplified by the Honors I received during graduation.
       <br><br>
       Full list of courses: Computational fluid dynamics; Introduction to Machine Learning and Data Mining; Introduction to Micro Meteorology for Wind Energy; Turbulence Theory; Wind Turbine Measurement Technique; Wind turbine technology and aerodynamics
-    skills: [Statistics, Matlab, AI, Electronics, WTG knowledge]
+    skills: [Statistics, Matlab, AI, Electronics, WTG Knowledge]
   - type: education
     education_type: Bachelors
     school: Technical University of Delft
@@ -71,7 +71,7 @@ cards:
       The thesis also presented an opportunity for me to improve my image analysis skills.
       <br><br>
       The theses can be found <a href="https://repository.tudelft.nl/record/uuid:ed52186d-40b5-4ded-be97-388ad55d9aad">here</a>.
-    skills: [ Statistics, Python, AI, WTG knowledge ]
+    skills: [ Statistics, Python, AI, WTG Knowledge ]
 #  - type: project
 #    education_type: Paper
 #    school: Danish Technical University
@@ -115,9 +115,9 @@ cards:
       I was hired because of my programming expertise and my understanding of wind turbines, and my main task was to improve the suite of optimisation models ran at the company.
       I reduced the uncertainty of the models, and spearheaded an analyses towards a case of frequent turbine-generator failures, offering new insights.
       <br><br>
-      I was also put in charge of an initiative to run the models live instead of statically -- updating results continuously as data streamed in, and performing automated turbine adjustments using SimuLink based on the results.
+      I was also put in charge of an initiative to run the models live instead of statically -- updating results continuously as data streamed in, and performing automated turbine adjustments using SimuLink.
       <br><br>
-      Some ad-hoc tasks that I performed were the unpacking of large binary data dumps to optimized/easily accessible data structures, and creating interactive insights tools towards mapping out the landscape of wind-farm projects.
-    skills: [ Linux, WTG Knowledge, Simulink, Data Structure, ]
+      Some ad-hoc tasks that I performed were the unpacking of large binary data dumps to easily accessible and optimized data structures, and creating interactive tools towards mapping out the landscape of wind-farm projects.
+    skills: [ Linux, WTG Knowledge, Simulink, Data Structure ]
 
 
