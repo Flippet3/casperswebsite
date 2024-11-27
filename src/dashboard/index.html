@@ -214,9 +214,11 @@
           <nav id="side-navbar" class="navbar navbar-light flex-column">
             <nav class="nav nav-pills text-muted w-100">
               {% for card in cards %}
-                <a class="nav-link text-muted" href="#card-{{ loop.index }}" data-card-id="card-{{ loop.index }}" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;" data-toggle="tooltip" title="{{card.title}}">
-                  {{ card.title }}
-                </a>
+                <div class="col-12">
+                  <a class="nav-link text-muted" href="#card-{{ loop.index }}" data-card-id="card-{{ loop.index }}" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;" data-toggle="tooltip" title="{{card.title}}">
+                    {{ card.title }}
+                  </a>
+                </div>
               {% endfor %}
             </nav>
           </nav>

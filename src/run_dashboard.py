@@ -3,6 +3,7 @@ from platform import system
 import panel as pn
 
 from dashboard.overview_base import OverviewBase
+from general_tools.general_tools import IS_LOCAL
 
 
 def register_overviews():
@@ -18,7 +19,10 @@ def run_dashboard():
     register_overviews()
 
     apps = {app_name: run_app_func for (app_name, run_app_func) in sum(OverviewBase.apps.values(), [])}
-    apps[""] = apps["Resume"]  # Set initial site.
+    if IS_LOCAL:
+        apps[""] = apps["Resume"]  # Set initial site.
+    else:
+        apps[""] = apps["Home"]  # Set initial site.
 
     # Manage favicon
     server_kwargs = dict(
