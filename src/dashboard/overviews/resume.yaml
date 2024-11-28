@@ -1,7 +1,7 @@
 #file: noinspection YAMLSchemaValidation
 cards:
   - type: education
-    education_type: Masters - Aerospace Engineering (Honors)
+    education_type: Master - Aerospace Engineering (Honors)
     school: Technical University of Delft
     start: 2018-09-01
     end: 2020-08-01
@@ -17,7 +17,7 @@ cards:
       Full list of courses: Research Methodologies; Experimental Simulations; Rotor / wake Aerodynamics; Flow Measurement Techniques; Bio-inspired Intelligence and learning for Aerospace Applications; Fundamentals of Aero-elasticity; Wind Turbine Design; Wind Turbine Aero-elasticity; Thesis Wind Energy Rotor Design; Engineering Optimisation: Concepts and Applications; Ethics and Engineering for Aerospace Engineering
     skills: [Optimization, Aerodynamics, AI, Python, WTG Knowledge]
   - type: education
-    education_type: Masters - Wind Turbine Engineering (Honors)
+    education_type: Master - Wind Turbine Engineering (Honors)
     school: Danish Technical University
     start: 2018-09-01
     end: 2020-08-01
@@ -33,14 +33,14 @@ cards:
       Full list of courses: Computational fluid dynamics; Introduction to Machine Learning and Data Mining; Introduction to Micro Meteorology for Wind Energy; Turbulence Theory; Wind Turbine Measurement Technique; Wind turbine technology and aerodynamics
     skills: [Statistics, Matlab, AI, Electronics, WTG Knowledge]
   - type: education
-    education_type: Bachelors - Aerospace Engineering
+    education_type: Bachelor - Aerospace Engineering
     school: Technical University of Delft
     start: 2014-09-01
     end: 2018-08-01
     img_ref: https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fclipground.com%2Fimages%2Ftu-delft-logo-png-4.png&f=1&nofb=1&ipt=5bfd62766e36415691d7fa162fe5628fe1f1077ae860dd3e6f2a9fbb70e45590&ipo=images
     text: >-
-      My bachelors was in Aerospace Engineering, targeted towards air- and spaceflight. 
-      During my bachelors, I learned about material properties and aerospace design, taking my initial steps towards structural and aerodynamic analysis.
+      My bachelor was in Aerospace Engineering, targeted towards air- and spaceflight. 
+      During my bachelor, I learned about material properties and aerospace design, taking my initial steps towards structural and aerodynamic analysis.
       I also set-up fundamentals in calculus, linear algebra, probabilities, differential equations, and learned to code in both Matlab and Python.
       <br><br>
       Full list of courses: Aerospace Materials and Structures; Introduction to Aerospace Engineering; Exploring Aerospace Engineering and Design; Engineering Mechanics; Programming and Scientific Computing in Python for AE1; Aerospace Design and Construction; Physics; Aerospace System Design; Aerodynamics Sub- and Supersonic; Structural and Vibrational Analysis and Design; Applied Numerical Analysis and Computational Modelling; Test, Analysis and Simulation; Flight and Orbital Mechanics and Propulsion; Aerospace Signals, Systems and Control; Design Synthesis ; Aerospace Systems Engineering, Design and Production; Aerospace Flight Dynamics, SVV including Flight Test; Calculus II; Linear Algebra; Calculus I; Differential Equations, Probability Theory, and Statistics

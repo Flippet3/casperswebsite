@@ -26,31 +26,31 @@ class Resume(OverviewBase):
 
         def add_education_card(school: str, education_type: str, start_year: int, end_year: int, img_ref: str, text: str, skills: list[str]):
             add_card(
-                f"({start_year} - {end_year}) <img src='https://img.icons8.com/?size=24&id=86200&format=png'> {education_type} - {school}",
+                f"<img src='https://img.icons8.com/?size=24&id=86200&format=png'> ({start_year} - {end_year}) {education_type} - {school}",
                 text, img_ref, skills
             )
 
         def add_job_card(company: str, role: str, start_year: int, end_year: int, img_ref: str, text: str, skills: list[str]):
             add_card(
-                f"({start_year} - {end_year}) <img src='https://img.icons8.com/?size=24&id=xkZW9nXosg6X&format=png'> {company} - {role}",
+                f"<img src='https://img.icons8.com/?size=24&id=xkZW9nXosg6X&format=png'> ({start_year} - {end_year}) {company} - {role}",
                 text, img_ref, skills
             )
 
         def add_award_card(award: str, year: int, img_ref: str, text: str, skills: list[str]):
             add_card(
-                f"({year}) <img src='https://img.icons8.com/?size=24&id=85600&format=png'> {award}",
+                f"<img src='https://img.icons8.com/?size=24&id=85600&format=png'> ({year}) {award}",
                 text, img_ref, skills
             )
 
         def add_certificate_card(certificate: str, year: int, img_ref: str, text: str, skills: list[str]):
             add_card(
-                f"({year}) <img src='https://img.icons8.com/?size=24&id=6857&format=png'> {certificate}",
+                f"<img src='https://img.icons8.com/?size=24&id=6857&format=png'> ({year}) {certificate}",
                 text, img_ref, skills
             )
 
         def add_project_card(project: str, year: int, img_ref: str, text: str, skills: list[str]):
             add_card(
-                f"({year}) <img src='https://img.icons8.com/?size=24&id=85878&format=png'> {project}",
+                f"<img src='https://img.icons8.com/?size=24&id=85878&format=png'> ({year}) {project}",
                 text, img_ref, skills
             )
 
