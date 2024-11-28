@@ -29,7 +29,8 @@ def run_dashboard():
         port=5006,
         websocket_origin="*",
         static_dirs={"assets": "./static"},
-        favicon="assets/favicon.ico"
+        favicon="assets/favicon.ico",
+        title="Casper's website"
     )
 
     if "windows" in system().lower():
