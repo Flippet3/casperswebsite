@@ -53,10 +53,10 @@ cards:
     img_ref: https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fclipground.com%2Fimages%2Ftu-delft-logo-png-4.png&f=1&nofb=1&ipt=5bfd62766e36415691d7fa162fe5628fe1f1077ae860dd3e6f2a9fbb70e45590&ipo=images
     text: >-
       Wanting to take a break from the hard-core physics and mathematics involved with Aerospace Engineering, I decided to broaden my horizons in communication studies.
-      My philosophy was: Whether you're maneging or being managed, it's always good to be able to communicate clearly.
+      My philosophy was: whether you're maneging or being managed, it's always good to be able to communicate clearly.
       Here I learned the common hurdles and pit-falls of communication, and became more aware of my own communication strategy and personality within teams.
       <br><br>
-      Full list of courses: Communication, Marketing and Innovation; Sociology and Psychology of Collaboration and Social Networks; Conversation Strategies; C-Lab Part 1: Analysis; Visual Thinking; Science Centre; 16 C-Lab Part 2: Synthesis; Intercultural Communication; Science Journalism and Social Media;
+      Full list of courses: Communication, Marketing and Innovation; Sociology and Psychology of Collaboration and Social Networks; Conversation Strategies; C-Lab Part 1: Analysis; Visual Thinking; Science Centre; C-Lab Part 2: Synthesis; Intercultural Communication; Science Journalism and Social Media;
     skills: [ Communication ]
   - type: education
     education_type: Master Thesis
@@ -153,9 +153,10 @@ cards:
     year: 2017-07-01
     img_ref: https://delftschestudentenbond.nl/_nuxt/img/embleem.7dfffad.png
     text: >-
-      As a final project of my bachelor's programme, I worked together in a team of 10 engineers.
-      We designed a drone capable of inspecting and repairing small cracks on an aircraft fuselage.
-      I presented in the final symposium of the project where we were rewarded 4th position out of 26.
+      During my years at the Delftsche Studenten Bond (a Dutch student association in Delft), I was elected to be the leading representative of roughly 30 students from all different study lines.
+      I was tasked with leading meetings and giving speeches at relevant events.
+      I also was in charge of organisation, delegating task-forces and the well-being of the students.
+      Besides being a rewarding and fun role, it taught me responsibility, public speaking, and the logistical aspects of management.
     skills: [ Communication ]
   - type: project
     project: Journal Article
