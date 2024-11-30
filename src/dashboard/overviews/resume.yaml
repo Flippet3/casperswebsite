@@ -180,5 +180,33 @@ cards:
       This all taught me about story structure, forceful writing, and the power of words.
       As part of my outgoing personality, I have also performed quite a few stories in front of crowds, and I've loved every second of it.
     skills: [ Communication ]
+  - type: project
+    project: Advent Of Code
+    year: 2018-01-01
+    img_ref: https://user-images.githubusercontent.com/16360374/49324718-7954f100-f4e8-11e8-8ef6-1b701afc504f.png
+    text: >-
+      Most years since 2018, I've participated in a community event called Advent of Code.
+      In this event, programming puzzles are opened every day from the 1st of December until Christmas, progressing in difficulty.
+      After the first year, I tended to add a challenge to improve my coding capabilities.
+      <br>
+      <br>2018 - Solving the puzzles with Matlab, visualizing all solutions.
+      <br>2019 - Solving the puzzles with Python, trying to rely heavily on pandas and numpy, and optimizing runtime efficiency.
+      <br>2020 - Solving the puzzles with Rust, learning the language.
+      <br>2022 - Solving the puzzles with a single line of Python (sometimes over a 1000 characters long), using the magic of list comprehension.
+      <br>2023 - Solving the solution with Python, creating a workflow with Github Actions to automatically update a python package that solves AOC.
+      <br>2024 - Automate puzzle solutions with a single button click by programmatically requesting the webpage, having a gpt model write code to solve it, and iteratively running the code in a container to then automatically push the solution.
+    skills: [ Matlab, Python, Rust, AI ]
+  - type: project
+    project: Game Design
+    year: 2014-01-01
+    img_ref: https://brandslogos.com/wp-content/uploads/images/large/unity-logo.png
+    text: >-
+      As a hobby, I explored game design, starting with Pygame and quickly transitioning to Unity, where I learned C#. 
+      Over time, I created numerous games, some of which I published on Kongregate, collectively accumulating over half a million plays.
+      <br>
+      <br>Beyond solo projects, I collaborated with a friend to develop and publish games on the Play Store, gaining experience in marketing alongside technical skills.
+      <br>From ideation to publication, this journey enriched my understanding of game design, development workflows, and player engagement strategies.
+    skills: [ Unity, C#, Game Design, Marketing ]
+
 
 
