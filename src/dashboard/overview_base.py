@@ -12,6 +12,7 @@ class OverViewCategory:
     Home = "Home"
     CV = "Résumé"
     HowItsMade = "How It's Made"
+    AuthorsPage = "Author's Page"
 
 
 class OverviewBase(ABC):

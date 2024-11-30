@@ -10,17 +10,19 @@ def register_overviews():
     from dashboard.overviews.home import Home
     from dashboard.overviews.howitsmade import HowItsMade
     from dashboard.overviews.resume import Resume
+    from dashboard.overviews.authors_page import AuthorsPage
 
     Home.register()
     HowItsMade.register()
     Resume.register()
+    AuthorsPage.register()
 
 def run_dashboard():
     register_overviews()
 
     apps = {app_name: run_app_func for (app_name, run_app_func) in sum(OverviewBase.apps.values(), [])}
     if IS_LOCAL:
-        apps[""] = apps["Resume"]  # Set initial site.
+        apps[""] = apps["Author's_Page"]  # Set initial site.
     else:
         apps[""] = apps["Home"]  # Set initial site.
 
