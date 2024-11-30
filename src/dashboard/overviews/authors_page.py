@@ -47,7 +47,7 @@ class AuthorsPage(OverviewBase):
         To boldly go where none have gone before, it's crucial to know where some have gone before—lest you explore the already explored.
         I'm not sure if that makes sense, but in order to know what you're writing, it's good to know the history and patterns of writing.
         Reinventing the wheel is a fool's errand, and Jessica perfectly describes the wheels that already exist out there.
-        And makes a compelling argument for being creative within patterns, rather than with patterns.
+        She also makes a compelling argument for being creative within patterns, rather than with patterns.
         <br><br>The Elements of Style by William Strunk Jr. and E.B. White.
         Writing is a window into a story.
         If words should evoke images and the imagination, then, by God, don't make your wordy windows tainted by purple prose or grammatical inconsistencies.
