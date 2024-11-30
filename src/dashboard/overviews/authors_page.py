@@ -16,8 +16,8 @@ class AuthorsPage(OverviewBase):
     def app_content(cls, bootstrap: CustomTemplate) -> CustomTemplate:
         bootstrap.add_card("The Rhythm Of A Life")
         bootstrap.add_container(10)
-        bootstrap.add_text("""The Rhythm of a Life" came to me while I was in Australia, where I'd unfold my foldable keyboard and type away on my phone in cafes and libraries.
-        A lifelong love of poetry inspired me, but I wanted to challenge its conventions—transforming a poetry collection into a cohesive story.
+        bootstrap.add_text("""I wrote The Rhythm of a Life while I was in Australia, where I'd unfold my foldable keyboard and type away on my phone in cafes and libraries.
+        A lifelong love of expression through poetry inspired me, but I wanted to challenge its conventions—transforming a poetry collection into a cohesive story.
         Each poem in the book is a chapter, weaving together the highs and lows of a life lived fully—birth to death—creating a narrative as rhythmic as its verse.
         <br><br>
         The book is available through Amazon in all countries, but <a href="https://www.amazon.com/dp/879753840X">here</a> is the link to the US store.
