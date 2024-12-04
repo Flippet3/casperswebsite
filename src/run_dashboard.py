@@ -22,7 +22,7 @@ def run_dashboard():
 
     apps = {app_name: run_app_func for (app_name, run_app_func) in sum(OverviewBase.apps.values(), [])}
     if IS_LOCAL:
-        apps[""] = apps["Author's_Page"]  # Set initial site.
+        apps[""] = apps["Resume"]  # Set initial site.
     else:
         apps[""] = apps["Home"]  # Set initial site.
 
