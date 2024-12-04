@@ -82,7 +82,7 @@ class Resume(OverviewBase):
 
         bootstrap.add_card("Select skills", skills=all_skills)
         bootstrap.add_container(12)
-        bootstrap.add_text("<b>Click the below box to select the skills that you are interested in, and, below, you'll only see the relevant cards.</b>")
+        bootstrap.add_text("<b>Click the box below to select the skills that you are interested in, and filter for relevant cards.</b>")
         bootstrap.add_panel_component(multi_choice)
 
         job_cards = sorted(filter(lambda x: x["type"] == "job", cards), key=lambda x: x["start"],
