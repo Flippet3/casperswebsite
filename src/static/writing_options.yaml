@@ -1,0 +1,37 @@
+settings:
+  - Day/Light
+  - Night/Dark
+  - Everyday
+  - Industrial
+  - Nature
+  - Work
+  - Creation
+  - Destruction
+  - Order/patterns
+  - Chaos/random
+emotion:
+  - Loss
+  - Gain
+  - Apathy
+  - Excitement
+  - Content
+  - Defeated
+  -
+arc:
+  - Acceptance - Embracing one's true self, circumstances, or identity.
+  - Faith - Learning to trust in oneself, others, or a higher power.
+  - Redemption - Seeking atonement for past mistakes or moral failures.
+  - Love - Opening oneself to vulnerability and emotional connection.
+  - Courage - Overcoming fear to face challenges or take action.
+  - Growth - Moving from immaturity to maturity or personal development.
+  - Freedom - Breaking free from oppression, societal norms, or internal limitations.
+  - Self-Discovery - Uncovering hidden truths about oneself or purpose.
+  - Revenge/Justice - Transforming through the pursuit of fairness or vengeance.
+  - None - A simple vignette where nothing changes.
+goal:
+  - Laugh
+  - Cry
+  - Showcase
+  - Weird
+  - Escape
+  - Inspire

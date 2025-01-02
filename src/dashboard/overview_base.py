@@ -13,7 +13,7 @@ class OverViewCategory:
     CV = "Résumé"
     HowItsMade = "How It's Made"
     AuthorsPage = "Author's Page"
-
+    Tools= "Tools"
 
 class OverviewBase(ABC):
     _apps = defaultdict(list)
