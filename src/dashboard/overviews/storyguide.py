@@ -33,6 +33,8 @@ class StoryGuide(OverviewBase):
         html = pn.widgets.StaticText()
         bootstrap.add_card("Story generator")
         bootstrap.add_container(10)
+        bootstrap.add_text("This is effectively a writing prompt generator that simply picks from a few options for goal, setting, emotion, and arc (following the Save The Cat arc structures).")
+        bootstrap.add_container(10)
         bootstrap.add_panel_component(html)
         bootstrap.add_container(2)
         bootstrap.add_panel_component(button)
