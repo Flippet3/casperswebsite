@@ -9,7 +9,7 @@ from dashboard.overview_base import OverviewBase, OverViewCategory
 from dashboard.template import CustomTemplate
 
 
-with open(os.getcwd().split("casperswebsite")[0] + r"casperswebsite\src\static\writing_options.yaml", "r") as o:
+with open(os.getcwd().split("casperswebsite")[0] + r"casperswebsite/src/static/writing_options.yaml", "r") as o:
     OPTIONS = yaml.load(o, Loader=yaml.SafeLoader)
 
 
