@@ -13,7 +13,8 @@ class OverViewCategory:
     CV = "Résumé"
     HowItsMade = "How It's Made"
     AuthorsPage = "Author's Page"
-    Tools= "Tools"
+    Tools = "Tools"
+    Shirt = "Shirt"
 
 class OverviewBase(ABC):
     _apps = defaultdict(list)
@@ -41,6 +42,8 @@ class OverviewBase(ABC):
         bootstrap = get_custom_template()
         menu_options = []
         for overview_category, overview_category_overviews in cls.apps.items():
+            if overview_category == OverViewCategory.Shirt:
+                continue
             if len(overview_category_overviews) == 1:
                 menu_options.append({
                     "label": str(overview_category).replace("_", " "),
