@@ -24,7 +24,11 @@ def register_overviews():
 def run_dashboard():
     register_overviews()
 
-    apps = {app_name: run_app_func for (app_name, run_app_func) in sum(OverviewBase.apps.values(), [])}
+    apps = {**{
+        app_name: run_app_func for (app_name, run_app_func) in sum(OverviewBase.apps.values(), [])
+    }, **{
+        app_name.lower(): run_app_func for (app_name, run_app_func) in sum(OverviewBase.apps.values(), [])
+    }}
     if IS_LOCAL:
         apps[""] = apps["Shirt"]  # Set initial site.
     else:

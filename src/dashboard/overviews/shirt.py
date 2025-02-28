@@ -210,7 +210,7 @@ class Shirt(OverviewBase):
         set_nr_visitors(get_nr_visitors() + 1)
 
         html_pane = pn.pane.HTML(r"""
-        <div class="customclass">Something to start off with</div>
+        <div class="customclass" style="font-size: large;">Something to start off with</div>
         """)
         start_message_id = 0 if "messageid" not in session_args else unobscure(session_args["messageid"])
 
@@ -225,7 +225,7 @@ class Shirt(OverviewBase):
             cridx = current_index[0]
             if not cridx > len(messages) - 1:
                 current_index[0] += 1
-                html_pane.object = fr"<div class='customclass'>{messages[cridx]}</div>"
+                html_pane.object = fr"<div class='customclass' style='font-size: large;'>{messages[cridx]}</div>"
                 pn.state.location.search = f"?messageid={obscure(cridx)}"
                 if cridx == len(messages) - 1:
                     button_holder.clear()
