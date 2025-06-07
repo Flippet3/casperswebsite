@@ -250,7 +250,6 @@ class Shirt(OverviewBase):
 
     @classmethod
     def app_content(cls, bootstrap: CustomTemplate) -> CustomTemplate:
-        return cls.alt_content(bootstrap) # For now.
         create_data_folder_and_file()
         session_args = {k: v[0].decode() for (k, v) in pn.state.session_args.items()}
         if "admin" in session_args:
@@ -261,6 +260,8 @@ class Shirt(OverviewBase):
             return cls.run_comment_section(bootstrap)
 
         set_nr_visitors(get_nr_visitors() + 1)
+
+        return cls.alt_content(bootstrap)  # For now.
 
         html_pane = pn.pane.HTML(r"""
         <div class="customclass" style="font-size: large;">Something to start off with</div>
