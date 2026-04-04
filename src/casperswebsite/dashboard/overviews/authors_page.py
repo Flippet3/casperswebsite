@@ -1,8 +1,8 @@
 import panel as pn
 
-from dashboard.overview_base import OverviewBase, OverViewCategory
-from dashboard.template import CustomTemplate
-from general_tools.general_tools import classproperty
+from casperswebsite.dashboard.overview_base import OverviewBase, OverViewCategory
+from casperswebsite.dashboard.template import CustomTemplate
+from casperswebsite.general_tools import classproperty
 
 
 class AuthorsPage(OverviewBase):

@@ -73,11 +73,35 @@ cards:
     skills: [ Statistics, Python, AI, WTG Knowledge ]
 #===========================================
   - type: job
+    company: Copenhagen Energy Trading
+    role: Platform Engineer
+    start: 2025-02-01
+    end: current
+    img_ref: https://media.licdn.com/dms/image/v2/D4E0BAQELR9V-KFIZzg/company-logo_200_200/B4EZl2Ojk3IQAM-/0/1758625151656/copenhagen_energy_trading_logo?e=2147483647&v=beta&t=hqzGq0vKijIroRhZl9l_wM7U78ddiwRS5N3lsfQDJ_0
+    text: >-
+      At Copenhagen Energy Trading (CET), rapid growth led to an impressive but inconsistent codebase, as the initial agile scaling of the trading infrastructure produced numerous bespoke solutions.
+      I was brought in to standardize and clean up the system. 
+      <br><br>
+      My primary initiative was the design and implementation of a unified data ingestion framework that could handle dozens of disparate data providers.
+      This system provided a common interface to handle protocols such as HTTP, SOAP, XML, and RESTful APIs.
+      I ensured robust watermarking to safeguard against data outages, baked in observability for easier maintenance, and emphasized modularity by following SOLID design principles and leveraging interfaces for extensibility.
+      We chose not to adopt a large DAG-oriented framework specifically to avoid vendor lock-in and keep the architecture modular and maintainable.
+      <br><br>
+      After bringing the ingestion framework to maturity, I led the introduction of Infrastructure as Code (IaC) to bring our Azure deployments under version control and reduce configuration drift between our manifests and production environments.
+      For this, I implemented Bicep as our IaC tool of choice, tightly integrating it into our deployment processes.
+      <br><br>
+      I then focused on improving the speed and reliability of data ingestion.
+      A pivotal change was migrating systems from traditional polling to a push-based approach—this involved orchestrating asynchronous workflows around publishers and routers that consumed event topics, which greatly reduced data latency.
+      <br><br>
+      Lastly, I spearheaded the development of CET’s first Battery Energy Storage System (BESS) trading infrastructure, enabling the company’s inaugural BESS asset to participate in electricity markets.
+      This entailed end-to-end work: building APIs, designing databases, creating dashboards, integrating with both internal tools and third-party battery software, and ensuring robust, reliable data flows that would empower traders and streamline operations.
+    skills: [ Protocols, SOLID, Interface Design, Observability, IaC, Azure, Bicep, Asynchronous Workflows, Event-driven Systems, API, Database Design, Dashboarding, Energy Trading, BESS Integration ]
+  - type: job
     company: Orsted
     role: Data Modelling Engineer
     start: 2022-06-01
     end: 2024-01-01
-    img_ref: https://companieslogo.com/img/orig/DOGEF-1fe99c39.png?t=1593237305
+    img_ref: https://companieslogo.com/img/orig/ORSTED.CO-07cdf670.png?t=1729921209
     text: >-
       Initially, I was hired in Orsted to streamline the model execution of the Power and Control Optimisation team within the Advanced Analytics department.
       During my onboarding, I became familiar with Azure pipelines and Kubernetes Orchestration (I would later follow a week-long seminar and successfully become a certified kubernetes developer.)
@@ -135,7 +159,7 @@ cards:
   - type: certificate
     certificate: Certified Kubernetes Application Developer (CKAD)
     year: 2023-11-07
-    img_ref: https://bmuschko.com/img/blog/ckad-prep/ckad-logo.png
+    img_ref: https://training.linuxfoundation.org/wp-content/uploads/2019/03/kubernetes-ckad-color-300x294.png
     text: >-
       During my employment at Orsted, I completed a week-long seminar where I learned all about kubernetes. 
       I then took a CKAD exam, and passed with flying colors, achieving 86% perfect answers above the 66% required to pass.
@@ -199,7 +223,7 @@ cards:
   - type: project
     project: Game Design
     year: 2014-01-01
-    img_ref: https://brandslogos.com/wp-content/uploads/images/large/unity-logo.png
+    img_ref: https://logos-world.net/wp-content/uploads/2023/01/Unity-Symbol.png
     text: >-
       As a hobby, for the last ten years, I've developed games in my spare time, starting with Pygame and quickly transitioning to Unity, where I learned C#. 
       Over time, I created numerous games, some of which I published on Kongregate, collectively accumulating over half a million plays.

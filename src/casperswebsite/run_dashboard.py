@@ -2,17 +2,17 @@ from platform import system
 
 import panel as pn
 
-from dashboard.overview_base import OverviewBase
-from general_tools.general_tools import IS_LOCAL
+from casperswebsite.dashboard.overview_base import OverviewBase
+from casperswebsite.general_tools import IS_LOCAL, get_base_folder
 
 
 def register_overviews():
-    from dashboard.overviews.home import Home
-    from dashboard.overviews.howitsmade import HowItsMade
-    from dashboard.overviews.resume import Resume
-    from dashboard.overviews.authors_page import AuthorsPage
-    from dashboard.overviews.storyguide import StoryGuide
-    from dashboard.overviews.shirt import Shirt
+    from casperswebsite.dashboard.overviews.home import Home
+    from casperswebsite.dashboard.overviews.howitsmade import HowItsMade
+    from casperswebsite.dashboard.overviews.resume import Resume
+    from casperswebsite.dashboard.overviews.authors_page import AuthorsPage
+    from casperswebsite.dashboard.overviews.storyguide import StoryGuide
+    from casperswebsite.dashboard.overviews.shirt import Shirt
 
     Home.register()
     HowItsMade.register()
@@ -38,7 +38,7 @@ def run_dashboard():
     server_kwargs = dict(
         port=5006,
         websocket_origin="*",
-        static_dirs={"assets": "./static"},
+        static_dirs={"assets": f"{get_base_folder()}/static"},
         favicon="assets/favicon.ico",
         title="Casper's website"
     )

@@ -2,7 +2,7 @@ import uuid
 
 import panel as pn
 
-from general_tools.general_tools import get_base_folder
+from casperswebsite.general_tools import get_base_folder
 
 # Initialize Panel Extension
 pn.extension()

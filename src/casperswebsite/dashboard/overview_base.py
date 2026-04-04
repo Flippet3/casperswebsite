@@ -4,8 +4,8 @@ from collections import defaultdict
 
 import panel as pn
 
-from dashboard.template import get_custom_template, CustomTemplate
-from general_tools.general_tools import classproperty
+from casperswebsite.dashboard.template import get_custom_template, CustomTemplate
+from casperswebsite.general_tools import classproperty
 
 
 class OverViewCategory:

@@ -3,9 +3,9 @@ import yaml
 
 import panel as pn
 
-from dashboard.overview_base import OverviewBase, OverViewCategory
-from dashboard.template import CustomTemplate
-from general_tools.general_tools import get_base_folder
+from casperswebsite.dashboard.overview_base import OverviewBase, OverViewCategory
+from casperswebsite.dashboard.template import CustomTemplate
+from casperswebsite.general_tools import get_base_folder
 
 
 class Resume(OverviewBase):
@@ -87,6 +87,10 @@ class Resume(OverviewBase):
 
         job_cards = sorted(filter(lambda x: x["type"] == "job", cards), key=lambda x: x["start"],
                                  reverse=True)
+        for job_card in job_cards:
+            if job_card["end"] == "current":
+                job_card["end"] = date.today()
+
         for card in job_cards:
             add_job_card(card["company"], card["role"], card["start"].year, card["end"].year,
                                card["img_ref"], card["text"], card["skills"])

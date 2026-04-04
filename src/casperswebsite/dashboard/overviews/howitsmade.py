@@ -1,7 +1,7 @@
 import panel as pn
 
-from dashboard.overview_base import OverviewBase, OverViewCategory
-from dashboard.template import CustomTemplate
+from casperswebsite.dashboard.overview_base import OverviewBase, OverViewCategory
+from casperswebsite.dashboard.template import CustomTemplate
 
 
 class HowItsMade(OverviewBase):
