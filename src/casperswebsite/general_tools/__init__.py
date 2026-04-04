@@ -7,7 +7,7 @@ IS_LOCAL = bool(int(os.environ.get("IS_LOCAL", "windows" in system().lower())))
 
 
 def get_root_folder():
-    rootpath = os.path.abspath(".").split("casperswebsite")[0] + "casperswebsite/"
+    rootpath = os.path.abspath(os.path.dirname(__file__)).split("casperswebsite")[0] + "casperswebsite/"
     return rootpath
 
 def get_module_folder():
