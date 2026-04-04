@@ -6,11 +6,11 @@ import yaml
 import panel as pn
 
 from casperswebsite.dashboard.overview_base import OverviewBase, OverViewCategory
-from casperswebsite.general_tools import get_base_folder
+from casperswebsite.general_tools import get_module_folder
 from casperswebsite.dashboard.template import CustomTemplate
 
 
-with open(get_base_folder() + "static/writing_options.yaml", "r") as o:
+with open(get_module_folder() + "static/writing_options.yaml", "r") as o:
     OPTIONS = yaml.load(o, Loader=yaml.SafeLoader)
 
 

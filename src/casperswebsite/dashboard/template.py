@@ -2,13 +2,13 @@ import uuid
 
 import panel as pn
 
-from casperswebsite.general_tools import get_base_folder
+from casperswebsite.general_tools import get_module_folder
 
 # Initialize Panel Extension
 pn.extension()
 
 # Read the template file
-with open(get_base_folder() + "dashboard/index.html", 'r') as file:
+with open(get_module_folder() + "dashboard/index.html", 'r') as file:
     template_str = file.read()
 
 

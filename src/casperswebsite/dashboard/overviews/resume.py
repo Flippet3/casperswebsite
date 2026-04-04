@@ -5,7 +5,7 @@ import panel as pn
 
 from casperswebsite.dashboard.overview_base import OverviewBase, OverViewCategory
 from casperswebsite.dashboard.template import CustomTemplate
-from casperswebsite.general_tools import get_base_folder
+from casperswebsite.general_tools import get_module_folder
 
 
 class Resume(OverviewBase):
@@ -54,7 +54,7 @@ class Resume(OverviewBase):
                 text, img_ref, skills
             )
 
-        with open(get_base_folder() + "dashboard/overviews/resume.yaml", "r") as o:
+        with open(get_module_folder() + "dashboard/overviews/resume.yaml", "r") as o:
             cards = yaml.load(o, yaml.SafeLoader)["cards"]
 
         all_skills = sorted(set(sum(map(lambda x: x["skills"], cards), [])))

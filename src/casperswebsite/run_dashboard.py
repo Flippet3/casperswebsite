@@ -3,7 +3,7 @@ from platform import system
 import panel as pn
 
 from casperswebsite.dashboard.overview_base import OverviewBase
-from casperswebsite.general_tools import IS_LOCAL, get_base_folder
+from casperswebsite.general_tools import IS_LOCAL, get_module_folder
 
 
 def register_overviews():
@@ -38,7 +38,7 @@ def run_dashboard():
     server_kwargs = dict(
         port=5006,
         websocket_origin="*",
-        static_dirs={"assets": f"{get_base_folder()}/static"},
+        static_dirs={"assets": f"{get_module_folder()}/static"},
         favicon="assets/favicon.ico",
         title="Casper's website"
     )
