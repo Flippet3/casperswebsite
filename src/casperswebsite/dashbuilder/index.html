@@ -1,4 +1,3 @@
-{% from macros import embed %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -163,11 +162,12 @@
       }
     </style>
   <link rel="shortcut icon" href="data:image/x-icon;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACoUlEQVRYR+2WS2gTURSG/3lnJo8mkWoxRWhDjdX6CJFakGo7SjRYY2mhoKQUQcWCoIiCouJGJItCtSqo3VkXIqhUXHRRfCzEnbpREERBsGKVNonpw6TJeCeQWAlNZshAEHJmN3Pn3O/+97woz88BBWU0qgJQUeC/VKCecSIorEUTswI35l6hmjbDSYl4lvyE7+k46hgHTkvbcSY+hpgyXzDHdGWBSHE4JbWiR9gAjmIyjo/FRuHjXDgobkZSSeHtwgSctAQ3swzdkRG8S00aA2CjBNyydcHLrsw5DM88x8j8a/AEZiffgHNSO+y0mPtuGAANCtet+yDz7pzzKJG2deomEkjl3q1na3DH1gNVKdUMA9jDezBg7SAYf20iFYMcGc6T94jYjJPkmgwDUE//oCqERnb5P5stBWCmeIzbD8FBrsIQBRpIMD229xGMxecHlgJQKS+bd6HL1GQMwH7TJlw078iTuhBAC7sKFywyeqP3MaXMlpYF5yUZIdGrC0BdrOqlpc0WrQODlg4EBI9uAK0dvijAkGUv/MLq8gGEzbvRaVpXPoDj4lb0Sy3lA/CTEjtkDeoGUOtHWkMYFo0BB+lyTx2Hc+U1S1IoDZu5WlwhsdMdvYtv6V+lpaH6d9gSQCdpv4utEMA1olgbVw95ehg/lJnSAWrpKjy090LtiFmbJH2/bfp2nsxBvhFhawCjv9/jLJkHilnRK8g6kDk3BklDEig280ohz9HYI7xIfs4UnRraij6TDyGTF1/SERyI3kNEmSu2PzQDqJ58rAuXLH4y8TgzjlPk/CrERjIj9EtbwIDGm+RXnIg/yUxGWkwXgOqQJ9u0k7lgG1eXGb2uzr7EGraaDCoujCc+YizxAQsETKvpBtDqWOu6CkBFgbIr8AcQFDLwBVg+IgAAAABJRU5ErkJggg==" />
-  <!-- Panel Resources -->
-  {{ resources }}
-  {{ head }}
-  {{- bokeh_css if bokeh_css }}
-  {{  bokeh_js if bokeh_js }}
+  {{  header_html if header_html }}
+  <script src="https://cdn.bokeh.org/bokeh/release/bokeh-3.9.0.min.js"></script>
+  <script src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-3.9.0.min.js"></script>
+  <script src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-3.9.0.min.js"></script>
+  <script src="https://cdn.bokeh.org/bokeh/release/bokeh-gl-3.9.0.min.js"></script>
+  <script src="https://cdn.bokeh.org/bokeh/release/bokeh-mathjax-3.9.0.min.js"></script>
 </head>
 <body>
     <div class="container-fluid p-5 bg-primary text-white text-center">
@@ -227,7 +227,7 @@
         <!-- Main Content Area (2/3rd width) -->
         <div class="col-md-8">
           {% for card in cards %}
-            <div class="card m-3 shadow-lg justify-content-center" id="card-{{ loop.index }}" data-skills="{{ card.skills|join(',') }}">
+            <div class="card m-3 shadow-lg justify-content-center" id="card-{{ loop.index }}" tag="{{ card.tag }}">
               <div class="card-header">
                 <h5>{{ card.title }}</h5>
               </div>
@@ -236,17 +236,14 @@
                   <!-- Loop over containers -->
                   {% for container in card.containers %}
                     <div class="col-md-{{ container.width }}">
-                      <!-- Loop over content -->
-                      {% for content in container.content %}
-                        <!-- Render content based on type -->
-                        {% if content.content_type == 'text' %}
-                          <p>{{ content.value }}</p>
-                        {% elif content.content_type == 'image' %}
-                          <img src="{{ content.value }}" class="img-fluid">
-                        {% elif content.content_type == 'panel_component' %}
-                          {{ embed(roots[content.component_id]) }}
-                        {% endif %}
-                      {% endfor %}
+                      <!-- Render content based on type -->
+                      {% if container.embed_type.name == 'Text' %}
+                        <p>{{ container.content }}</p>
+                      {% elif container.embed_type.name == 'Image' %}
+                        <img src="{{ container.content }}" class="img-fluid">
+                      {% elif container.embed_type.name == 'Html' %}
+                        {{ container.content | safe }}
+                      {% endif %}
                     </div>
                   {% endfor %}
                 </div>
@@ -264,12 +261,5 @@
     src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
   ></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- Panel Scripts -->
-  {%      for doc in docs %}
-  {{        embed(doc) if doc.elementid }}
-  {%      endfor %}
-  {{ plot_script | indent(4) }}
-  {{ scripts }}
-
 </body>
 </html>

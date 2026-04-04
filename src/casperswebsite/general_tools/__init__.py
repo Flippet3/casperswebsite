@@ -11,7 +11,7 @@ def get_root_folder():
     return rootpath
 
 def get_module_folder():
-    basepath = get_root_folder + "src/casperswebsite/"
+    basepath = get_root_folder() + "src/casperswebsite/"
     return basepath
 
 
