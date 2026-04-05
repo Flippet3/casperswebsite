@@ -10,6 +10,7 @@ class OverViewCategory(Enum):
     AuthorsPage = "Author's Page"
     Tools = "Tools"
     Shirt = "Shirt"
+    EnergySimulation = "Energy Simulation"
 
 
 class EmbedType(Enum):
@@ -28,6 +29,9 @@ class CardInfo(BaseModel):
     title: str
     containers: list[ContainerInfo]
     tag: str = ""
+    style: str = ""
+    header_style: str = ""
+    body_style: str = ""
 
 
 class PageInfo(BaseModel):

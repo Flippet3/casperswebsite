@@ -1,6 +1,7 @@
 import os
 import shutil
 from casperswebsite.dashboard.pages.authors_page import AuthorsPage
+from casperswebsite.dashboard.pages.energy_simulation import EnergySimulationPage
 from casperswebsite.dashboard.pages.home import HomePage
 from casperswebsite.dashboard.pages.howitsmade import HowItsMadePage
 from casperswebsite.dashboard.pages.resume import ResumePage
@@ -26,27 +27,15 @@ if __name__ == "__main__":
     else:
         os.makedirs(compiled_dir)
 
-    rendered_pages = render_pages([HomePage(), AuthorsPage(), HowItsMadePage(), StoryGuidePage(), ResumePage()])
+    rendered_pages = render_pages(
+        [HomePage(), AuthorsPage(), HowItsMadePage(), StoryGuidePage(), ResumePage(), EnergySimulationPage()]
+    )
     for endpoint, html in rendered_pages.items():
         out_dir = os.path.join(compiled_dir, endpoint)
         os.makedirs(out_dir, exist_ok=True)
         out_path = os.path.join(out_dir, "index.html")
+        if endpoint == "Home":
+            with open(os.path.join(compiled_dir, "index.html"), "w", encoding="utf-8") as f:  # fmt: skip
+                f.write(html)
         with open(out_path, "w", encoding="utf-8") as f:
             f.write(html)
-
-    # Generate dummy index.html
-    index_html_path = os.path.join(compiled_dir, "index.html")
-    dummy_html = """<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Dummy HTML Page</title>
-</head>
-<body>
-  <h1>Welcome to the Dummy HTML Page</h1>
-  <p>This is a placeholder page for testing purposes.</p>
-</body>
-</html>
-"""
-    with open(index_html_path, "w", encoding="utf-8") as f:
-        f.write(dummy_html)

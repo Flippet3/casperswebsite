@@ -227,11 +227,11 @@
         <!-- Main Content Area (2/3rd width) -->
         <div class="col-md-8">
           {% for card in cards %}
-            <div class="card m-3 shadow-lg justify-content-center" id="card-{{ loop.index }}" tag="{{ card.tag }}">
-              <div class="card-header">
+            <div class="card m-3 shadow-lg justify-content-center" id="card-{{ loop.index }}" tag="{{ card.tag }}"{% if card.style %} style="{{ card.style }}"{% endif %}>
+              <div class="card-header"{% if card.header_style %} style="{{ card.header_style }}"{% endif %}>
                 <h5>{{ card.title }}</h5>
               </div>
-              <div class="card-body">
+              <div class="card-body"{% if card.body_style %} style="{{ card.body_style }}"{% endif %}>
                 <div class="row">
                   <!-- Loop over containers -->
                   {% for container in card.containers %}
