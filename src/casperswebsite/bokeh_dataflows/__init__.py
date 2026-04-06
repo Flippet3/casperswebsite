@@ -1,7 +1,8 @@
 from collections import defaultdict
 from enum import Enum, auto
 import os
-from typing import Literal
+import re
+from typing import Any, Literal, get_args, get_origin
 from bokeh.document import Document
 from bokeh.embed import components
 from bokeh.events import DocumentReady
@@ -11,6 +12,7 @@ import pydantic
 
 
 JsType = Literal["number", "string", "boolean", "object", "array", "date", "bigint", "symbol", "function", "undefined", "null", "map", "set"]  # fmt: skip
+_JS_TYPES: frozenset[str] = frozenset(get_args(JsType))
 
 
 class InputType(Enum):
@@ -92,7 +94,7 @@ class SuperCDS:
             with open(js_path, "w") as f:
                 f.write(f"{START_MARKER}\n")
                 f.write(f"{END_MARKER}\n")
-                f.write(f"  console.log('Running function {self.callback_name})")
+                f.write(f"  console.log('Running function {self.callback_name}');\n")
                 f.write("}\n")
 
         with open(js_path, "r+") as f:
@@ -132,12 +134,14 @@ class SuperCDS:
 
 
 class SuperCDSDataflow:
-    def __init__(self, super_cdss: list[SuperCDS], js_dir: str):
+    def __init__(self, super_cdss: list[SuperCDS], js_dir: str, tick_ms: int, engine_code: str):
         if not (isinstance(js_dir, str) and os.path.isdir(js_dir)):
             raise ValueError(f"js_dir '{js_dir}' is not a valid directory")
         self.js_dir = js_dir
         self.super_cdss = {super_cds.name: super_cds for super_cds in super_cdss}
         self.doc = Document()
+        self.engine_code = engine_code
+        self.tick_ms = tick_ms
 
     def update_signatures(self):
         for super_cds in self.super_cdss.values():
@@ -227,8 +231,9 @@ class SuperCDSDataflow:
                     }}"""
             if len(dirty_requests[super_cds.name]) > 0:
                 update_script += f"""
-                    ["{'","'.join(dirty_requests[super_cds.name])}"].forEach((dep) => {{if (!dirty.includes(dep) && dep !== "") {{dirty.push(dep)}}}});
-                    dirty.splice(dirty.indexOf({super_cds.name}), 1);"""
+                    ["{'","'.join(dirty_requests[super_cds.name])}"].forEach((dep) => {{if (!dirty.includes(dep) && dep !== "") {{dirty.push(dep)}}}});"""
+            update_script += f"""
+                    dirty.splice(dirty.indexOf('{super_cds.name}'), 1);"""
                     
             update_script += f"""
                     {"; ".join(it.replace("!=", "=") for it in reflog_checks)};
@@ -246,10 +251,97 @@ class SuperCDSDataflow:
                 var new_data;
 
                 function run_update_script() {{
+                    {self.engine_code}
                     {update_script}
-
                 }}
-                setInterval(run_update_script, 330);
+                setInterval(run_update_script, {self.tick_ms});
             """,
         )
         doc.js_on_event(DocumentReady, c)
+
+
+def _normalize_js_type_annotation(js_type_ann: Any) -> str:
+    if isinstance(js_type_ann, str) and js_type_ann in _JS_TYPES:
+        return js_type_ann
+    if get_origin(js_type_ann) is Literal:
+        args = get_args(js_type_ann)
+        if len(args) == 1 and args[0] in _JS_TYPES:
+            return args[0]
+    raise TypeError(f"Column annotation must be a JsType string or Literal[JsType], got {js_type_ann!r}")
+
+
+class AnnotatedStr(str):
+    """String that behaves like a normal ``str`` (e.g. for Bokeh field names) but can carry metadata."""
+
+    def __new__(cls, value: str, extra_info: Any = None, /, **meta: Any):
+        obj = str.__new__(cls, value)
+        obj.extra_info = extra_info
+        for k, v in meta.items():
+            setattr(obj, k, v)
+        return obj
+
+
+class SuperCDSMeta(type):
+    """Builds a :class:`SuperCDS` from annotated class attributes and wires column names as :class:`AnnotatedStr`."""
+
+    def __new__(mcs, cls_name: str, bases: tuple[type, ...], namespace: dict[str, Any]) -> type:
+        cls = super().__new__(mcs, cls_name, bases, namespace)
+        if cls_name.startswith("_") or getattr(cls, "__abstract_cds__", False):
+            return cls
+
+        annotations = dict(namespace.get("__annotations__", {}))
+        input_type = namespace.get("input_type", InputType.Array)
+        depends_spec = namespace.get("depends_on_columns", [])
+
+        super_columns: list[SuperCDSColumn] = []
+        column_names: list[str] = []
+        for col_name, js_type_ann in annotations.items():
+            if col_name not in namespace:
+                continue
+            init_val = namespace[col_name]
+            if not isinstance(init_val, list):
+                continue
+            js_type = _normalize_js_type_annotation(js_type_ann)
+            super_columns.append(
+                SuperCDSColumn(
+                    name=col_name,
+                    js_type=js_type,
+                    initial_value=init_val,
+                    input_type=input_type,
+                )
+            )
+            column_names.append(col_name)
+
+        if not super_columns:
+            return cls
+
+        cds_name = namespace.get("__cds_name__", re.sub(r"(?<!^)(?=[A-Z])", "_", cls_name).lower())
+        linked_deps: list[LinkedSuperCDSColumn] = []
+        items: tuple[Any, ...] = depends_spec if isinstance(depends_spec, (list, tuple)) else (depends_spec,)
+        for item in items:
+            if isinstance(item, type) and getattr(item, "super_cds", None) is not None:
+                linked_deps.extend(item.super_cds.columns.values())
+            elif isinstance(item, AnnotatedStr) and getattr(item, "linked_column", None) is not None:
+                linked_deps.append(item.linked_column)
+            else:
+                raise TypeError(f"depends_on_columns entry must be a SuperCDS class or column ref, got {item!r}")
+        super_cds = SuperCDS(cds_name, super_columns, depends_on_columns=linked_deps)
+
+        for col_name in column_names:
+            base_col = next(c for c in super_columns if c.name == col_name)
+            linked = LinkedSuperCDSColumn(super_cds_column=base_col, super_cds_name=cds_name)
+            setattr(
+                cls,
+                col_name,
+                AnnotatedStr(
+                    col_name,
+                    extra_info={"js_type": base_col.js_type, "super_cds_name": cds_name},
+                    linked_column=linked,
+                    js_type=base_col.js_type,
+                    super_cds_name=cds_name,
+                ),
+            )
+
+        cls.super_cds = super_cds
+        cls.source = super_cds.source
+        return cls

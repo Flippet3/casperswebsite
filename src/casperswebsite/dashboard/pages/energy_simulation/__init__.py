@@ -23,12 +23,12 @@ class EnergySimulationPage:
     #: transform scale(stageW/1000, stageH/600)).
 
     def build_page(self) -> PageInfo:
-        plots = get_plots(dataflow)
+        plots = get_plots()
 
         bokeh_script, bokeh_divs = dataflow.get_components_and_script(plots)
         bokeh_sources = "".join(div for key, div in bokeh_divs.items() if key.startswith("source_"))
 
-        graphs = [{"div": bokeh_divs["dummy_fig"], "left": 120, "top": 80, "width": 200, "height": 100}]
+        graphs = [{"div": bokeh_divs["dummy_fig"], "left": 750, "top": 250, "width": 200, "height": 100}]
 
 
         anchors = "\n".join(f'''  <div id="anchor-{i}" style="position:absolute; pointer-events: auto;">{graph["div"]}</div>''' for (i, graph) in enumerate(graphs))
