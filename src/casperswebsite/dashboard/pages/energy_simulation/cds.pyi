@@ -23,14 +23,24 @@ class TimeSeries(metaclass=SuperCDSMeta):
     depends_on_columns: list[Any]
 
 class WindConfig(metaclass=SuperCDSMeta):
+    A: AnnotatedStr
     input_type: InputType
-    mean: AnnotatedStr
-    phi: AnnotatedStr
-    seasonal_period: AnnotatedStr
-    sigma: AnnotatedStr
+    k: AnnotatedStr
+    max_bin: AnnotatedStr
+    min_bin: AnnotatedStr
+    nr_bins: AnnotatedStr
     source: ColumnDataSource
     super_cds: SuperCDS
     input_type: InputType
+
+class WeibullBins(metaclass=SuperCDSMeta):
+    depends_on_columns: list
+    edges: AnnotatedStr
+    input_type: InputType
+    source: ColumnDataSource
+    super_cds: SuperCDS
+    input_type: InputType
+    depends_on_columns: list[Any]
 
 class WindData(metaclass=SuperCDSMeta):
     depends_on_columns: list
@@ -38,8 +48,18 @@ class WindData(metaclass=SuperCDSMeta):
     source: ColumnDataSource
     speed: AnnotatedStr
     super_cds: SuperCDS
+    target_bin: AnnotatedStr
     ts: AnnotatedStr
-    z: AnnotatedStr
+    input_type: InputType
+    depends_on_columns: list[Any]
+
+class WindDistance(metaclass=SuperCDSMeta):
+    depends_on_columns: list
+    input_type: InputType
+    source: ColumnDataSource
+    super_cds: SuperCDS
+    watermark: AnnotatedStr
+    wind_distance: AnnotatedStr
     input_type: InputType
     depends_on_columns: list[Any]
 

@@ -96,6 +96,7 @@ class SuperCDS:
                 f.write(f"{START_MARKER}\n")
                 f.write(f"{END_MARKER}\n")
                 f.write(f"  console.log('Running function {self.callback_name}');\n")
+                f.write(f"""  return {{{", ".join(f"'{col}': this_{col}" for col in self.columns)}}}\n""")
                 f.write("}\n")
 
         with open(js_path, "r+") as f:
@@ -135,13 +136,14 @@ class SuperCDS:
 
 
 class SuperCDSDataflow:
-    def __init__(self, super_cdss: list[SuperCDS], js_dir: str, tick_ms: int, engine_code: str):
+    def __init__(self, super_cdss: list[SuperCDS], js_dir: str, tick_ms: int, engine_setup: str, engine_code: str):
         if not (isinstance(js_dir, str) and os.path.isdir(js_dir)):
             raise ValueError(f"js_dir '{js_dir}' is not a valid directory")
         self.js_dir = js_dir
         self.super_cdss = {super_cds.name: super_cds for super_cds in super_cdss}
         self.doc = Document()
         self.engine_code = engine_code
+        self.engine_setup = engine_setup
         self.tick_ms = tick_ms
 
     def update_signatures(self):
@@ -157,7 +159,7 @@ class SuperCDSDataflow:
                 file_path = os.path.join(self.js_dir, filename)
                 if os.path.isfile(file_path):
                     os.remove(file_path)
-    
+
     def get_components_and_script(self, dom_elements: dict[str, DOMElement] = {}) -> tuple[str, dict[str, str]]:
         # Fresh document each embed so DocumentReady handlers do not stack, and so
         # roots + js_on_event stay on the same instance that components() serializes.
@@ -186,7 +188,7 @@ class SuperCDSDataflow:
                 with open(super_cds.callback_location(self.js_dir), "r") as f:
                     cb = f.read()
                 callbacks += cb + "\n"
-        
+
         dirty_requests = defaultdict(list)
         for super_cds in self.super_cdss.values():
             for dependency in super_cds.dependencies:
@@ -213,7 +215,10 @@ class SuperCDSDataflow:
             # jsdoc_lines += [f" * @param {{{linked_col.js_attr_type}}} {linked_col.js_attr_name}" for linked_col in self.depends_on_columns]
 
             super_cds = self.super_cdss[cds_name]
-            reflog_checks = [f'refLog["{super_cds.name}"]["{col.super_cds_column.name}"] != {super_cds.name}.data.{col.super_cds_column.name}' for col in super_cds.columns.values()]
+            reflog_checks = [
+                f'refLog["{super_cds.name}"]["{col.super_cds_column.name}"] != {super_cds.name}.data.{col.super_cds_column.name}'
+                for col in super_cds.columns.values()
+            ]
             update_script += f"""
                 // check if need for update
                 if (!dirty.includes("{super_cds.name}")) {{
@@ -224,18 +229,23 @@ class SuperCDSDataflow:
                 if (dirty.includes("{super_cds.name}")) {{"""
             if len(super_cds.dependencies) > 0:
                 args = [col.js_input for col in list(super_cds.columns.values()) + super_cds.depends_on_columns]
-                assignments = [f"'{col.super_cds_column.name}': new_data.{col.super_cds_column.name}" for col in super_cds.columns.values()]
+                input_type = next(iter(super_cds.columns.values())).super_cds_column.input_type
+                if input_type == InputType.SingleValue:
+                    assignments = [f"'{col.super_cds_column.name}': [new_data.{col.super_cds_column.name}]" for col in super_cds.columns.values()]
+                else:
+                    assignments = [f"'{col.super_cds_column.name}': new_data.{col.super_cds_column.name}" for col in super_cds.columns.values()]
+
                 update_script += f"""
                     new_data = {super_cds.callback_name}({", ".join(args)});
                     {super_cds.name}.data = {{
                         {", ".join(assignments)}
-                    }}"""
+                    }};"""
             if len(dirty_requests[super_cds.name]) > 0:
                 update_script += f"""
                     ["{'","'.join(dirty_requests[super_cds.name])}"].forEach((dep) => {{if (!dirty.includes(dep) && dep !== "") {{dirty.push(dep)}}}});"""
             update_script += f"""
                     dirty.splice(dirty.indexOf('{super_cds.name}'), 1);"""
-                    
+
             update_script += f"""
                     {"; ".join(it.replace("!=", "=") for it in reflog_checks)};
 
@@ -250,11 +260,12 @@ class SuperCDSDataflow:
                 var refLog = {{{",".join(f"'{graph_it}': {{}}" for graph_it in graph)}}};
                 var dirty = [];
                 var new_data;
+                {self.engine_setup}
 
                 function run_update_script() {{
                     {self.engine_code}
                     {update_script}
-                }}
+                }};
                 setInterval(run_update_script, {self.tick_ms});
             """,
         )
@@ -274,11 +285,16 @@ def _normalize_js_type_annotation(js_type_ann: Any) -> str:
 class AnnotatedStr(str):
     """String that behaves like a normal ``str`` (e.g. for Bokeh field names) but can carry metadata."""
 
-    def __new__(cls, value: str, extra_info: Any = None, /, **meta: Any):
+    # This lets static analyzers know about these attributes.
+    linked_column: LinkedSuperCDSColumn
+    extra_info: Any
+
+    def __new__(cls, value: str, linked_column: LinkedSuperCDSColumn, extra_info: Any = None, /, **meta: Any):
         obj = str.__new__(cls, value)
         obj.extra_info = extra_info
         for k, v in meta.items():
             setattr(obj, k, v)
+        obj.linked_column = linked_column
         return obj
 
 
@@ -322,7 +338,7 @@ class SuperCDSMeta(type):
         for item in items:
             if isinstance(item, type) and getattr(item, "super_cds", None) is not None:
                 linked_deps.extend(item.super_cds.columns.values())
-            elif isinstance(item, AnnotatedStr) and getattr(item, "linked_column", None) is not None:
+            elif isinstance(item, AnnotatedStr):
                 linked_deps.append(item.linked_column)
             else:
                 raise TypeError(f"depends_on_columns entry must be a SuperCDS class or column ref, got {item!r}")
@@ -336,8 +352,8 @@ class SuperCDSMeta(type):
                 col_name,
                 AnnotatedStr(
                     col_name,
+                    linked,
                     extra_info={"js_type": base_col.js_type, "super_cds_name": cds_name},
-                    linked_column=linked,
                     js_type=base_col.js_type,
                     super_cds_name=cds_name,
                 ),

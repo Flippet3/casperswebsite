@@ -24,19 +24,32 @@ class TimeSeries(metaclass=SuperCDSMeta):
     depends_on_columns = []
 
 class WindConfig(metaclass=SuperCDSMeta):
-    mean: Literal["number"] = [15]
-    phi: Literal["number"] = [0.95]
-    sigma: Literal["number"] = [0.25]
-    seasonal_period: Literal["number"] = [60*60*24*365]
+    A: Literal["number"] = [7]
+    k: Literal["number"] = [2]
+    min_bin: Literal["number"] = [0]
+    max_bin: Literal["number"] = [30]
+    nr_bins: Literal["number"] = [40]
     input_type = InputType.SingleValue
+
+class WeibullBins(metaclass=SuperCDSMeta):
+    edges: Literal["number"] = []
+    input_type = InputType.Array
+    depends_on_columns = [WindConfig]
 
 class WindData(metaclass=SuperCDSMeta):
     ts: Literal["number"] = [0]
+    target_bin: Literal["number"] = [5]
     speed: Literal["number"] = [5]
-    z: Literal["number"] = [0]
 
     input_type = InputType.Array
-    depends_on_columns = [WindConfig, TimeSeries]
+    depends_on_columns = [WeibullBins, TimeSeries]
+
+class WindDistance(metaclass=SuperCDSMeta):
+    wind_distance: Literal["number"] = [0]
+    watermark: Literal["number"] = [0]
+
+    input_type = InputType.SingleValue
+    depends_on_columns = [WindData.speed, WindData.ts]
 
 
 dataflow = SuperCDSDataflow(
@@ -47,6 +60,10 @@ dataflow = SuperCDSDataflow(
     ],
     js_dir=_cds_callback_dir,
     tick_ms=33,
+    engine_setup="""
+        const canvas = document.getElementById('energy-canvas');
+        const ctx = canvas.getContext('2d');
+    """,
     engine_code=f"""
         var engine_ts = [...{TimeSeries.super_cds.name}.data.{TimeSeries.ts}] 
         var last_val = engine_ts[engine_ts.length - 1];
@@ -57,6 +74,7 @@ dataflow = SuperCDSDataflow(
         {TimeSeries.super_cds.name}.data = {{
             "ts": engine_ts
         }}
+        drawGraphic(ctx, {TimeSeries.super_cds.name}.data.{TimeSeries.ts}[{TimeSeries.super_cds.name}.data.{TimeSeries.ts}.length - 1], {WindDistance.wind_distance.linked_column.js_input});
     """,
 )
 
@@ -102,7 +120,6 @@ if __name__ == "__main__":
                         lines.append("    depends_on_columns: list[Any]")
                     lines.append("")
         lines.append("dataflow: SuperCDSDataflow")
-        print(stub_path)
         with open(stub_path, "w") as f:
             f.write("\n".join(imports + lines))
 

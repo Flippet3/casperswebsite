@@ -84,16 +84,17 @@ class EnergySimulationPage:
                         ContainerInfo(
                             width=12,
                             embed_type=EmbedType.Text,
-                            content="""
-                                Casper is my name, and power is my game. 
-                                Domain-wise, I've learned a lot about electricity markets and renewable power generation. 
-                                Skill-wise, I've learned a lot about visualization of data and creating dashboards. This is a page to combine the two!
-                                <br><br>
-                                I've made a little scene that visualizes some energy production and demand.
-                                I've then made some graphs that give insight into what's happening in the scene.
-                                Then there's also some levers you can pull to influence the state of energy production.
-                                Can you optimize profit?!
-                            """,
+                            content="This is my pet project for visualizing a little scene and explaining the energy markets / energy production "
+                            # content="""
+                            #     Casper is my name, and power is my game. 
+                            #     Domain-wise, I've learned a lot about electricity markets and renewable power generation. 
+                            #     Skill-wise, I've learned a lot about visualization of data and creating dashboards. This is a page to combine the two!
+                            #     <br><br>
+                            #     I've made a little scene that visualizes some energy production and demand.
+                            #     I've then made some graphs that give insight into what's happening in the scene.
+                            #     Then there's also some levers you can pull to influence the state of energy production.
+                            #     Can you optimize profit?!
+                            # """,
                         ),
                     ],
                 ),
