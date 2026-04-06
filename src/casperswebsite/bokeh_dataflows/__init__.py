@@ -1,7 +1,12 @@
+from collections import defaultdict
 from enum import Enum, auto
 import os
 from typing import Literal
+from bokeh.document import Document
+from bokeh.embed import components
+from bokeh.events import DocumentReady
 from bokeh.models import ColumnDataSource, CustomJS
+from bokeh.models.dom import DOMElement
 import pydantic
 
 
@@ -34,6 +39,13 @@ class LinkedSuperCDSColumn(pydantic.BaseModel):
             return self.super_cds_column.js_type
         else:
             return f"{self.super_cds_column.js_type}[]"
+
+    @property
+    def js_input(self) -> str:
+        if self.super_cds_column.input_type == InputType.SingleValue:
+            return f"{self.super_cds_name}.data.{self.super_cds_column.name}[0]"
+        else:
+            return f"[... {self.super_cds_name}.data.{self.super_cds_column.name}]"
 
 
 class SuperCDS:
@@ -97,7 +109,7 @@ class SuperCDS:
             params = [f"this_{col.name}" for col in self._base_columns] + [linked_col.js_attr_name for linked_col in self.depends_on_columns]
 
             if self._base_columns:
-                returns_contents = ", ".join(f"this_{col.super_cds_column.name}: {col.js_attr_type}" for col in self.columns.values())
+                returns_contents = ", ".join(f"{col.super_cds_column.name}: {col.js_attr_type}" for col in self.columns.values())
                 returns_line = f" * @returns {{{{{returns_contents}}}}}"
             else:
                 returns_line = " * @returns {{}}"
@@ -125,6 +137,7 @@ class SuperCDSDataflow:
             raise ValueError(f"js_dir '{js_dir}' is not a valid directory")
         self.js_dir = js_dir
         self.super_cdss = {super_cds.name: super_cds for super_cds in super_cdss}
+        self.doc = Document()
 
     def update_signatures(self):
         for super_cds in self.super_cdss.values():
@@ -139,15 +152,40 @@ class SuperCDSDataflow:
                 file_path = os.path.join(self.js_dir, filename)
                 if os.path.isfile(file_path):
                     os.remove(file_path)
+    
+    def get_components_and_script(self, dom_elements: dict[str, DOMElement] = {}) -> tuple[str, dict[str, str]]:
+        # Fresh document each embed so DocumentReady handlers do not stack, and so
+        # roots + js_on_event stay on the same instance that components() serializes.
+        self.doc = Document()
+        self._attach_loop(self.doc)
 
-    def propegate_loop(self) -> CustomJS:
+        # Bokeh's components() uses OutputDocumentFor: it only keeps document-level
+        # state (e.g. js_on_event) if the passed models are *exactly* this doc's roots.
+        new_dom_elements = dict(dom_elements)
+        for value in dom_elements.values():
+            self.doc.add_root(value)
+        for i, super_cds in enumerate(self.super_cdss.values()):
+            new_dom_elements[f"source_{i}"] = super_cds.source
+            self.doc.add_root(super_cds.source)
+
+        assert set(new_dom_elements.values()) == set(self.doc.roots)
+
+        script, divs = components(new_dom_elements)
+        return script, divs
+
+    def _attach_loop(self, doc):
         self.update_signatures()
-        callbacks = ""
+        callbacks = "\n"
         for super_cds in self.super_cdss.values():
             if len(super_cds.dependencies) > 0:
                 with open(super_cds.callback_location(self.js_dir), "r") as f:
                     cb = f.read()
                 callbacks += cb + "\n"
+        
+        dirty_requests = defaultdict(list)
+        for super_cds in self.super_cdss.values():
+            for dependency in super_cds.dependencies:
+                dirty_requests[dependency].append(super_cds.name)
 
         unresolved_cdss = sorted(self.super_cdss.keys())
         resolved_cdss = set()
@@ -163,9 +201,55 @@ class SuperCDSDataflow:
             else:
                 raise ValueError(f"Couldn't establish non-circular dependency graph. Resolved_cdss: {resolved_cdss}. Graph so far: {graph}")
 
-        return CustomJS(
+        update_script = ""
+        for cds_name in graph:
+            # Should be different logic if dependecies is empty
+            # jsdoc_lines = [f" * @param {{{col.js_attr_type}}} this_{col.super_cds_column.name}" for col in self.columns.values()]
+            # jsdoc_lines += [f" * @param {{{linked_col.js_attr_type}}} {linked_col.js_attr_name}" for linked_col in self.depends_on_columns]
+
+            super_cds = self.super_cdss[cds_name]
+            reflog_checks = [f'refLog["{super_cds.name}"]["{col.super_cds_column.name}"] != {super_cds.name}.data.{col.super_cds_column.name}' for col in super_cds.columns.values()]
+            update_script += f"""
+                // check if need for update
+                if (!dirty.includes("{super_cds.name}")) {{
+                    if ({" || ".join(reflog_checks)}) {{
+                        dirty.push("{super_cds.name}");
+                    }}
+                }}
+                if (dirty.includes("{super_cds.name}")) {{"""
+            if len(super_cds.dependencies) > 0:
+                args = [col.js_input for col in list(super_cds.columns.values()) + super_cds.depends_on_columns]
+                assignments = [f"'{col.super_cds_column.name}': new_data.{col.super_cds_column.name}" for col in super_cds.columns.values()]
+                update_script += f"""
+                    new_data = {super_cds.callback_name}({", ".join(args)});
+                    {super_cds.name}.data = {{
+                        {", ".join(assignments)}
+                    }}"""
+            if len(dirty_requests[super_cds.name]) > 0:
+                update_script += f"""
+                    ["{'","'.join(dirty_requests[super_cds.name])}"].forEach((dep) => {{if (!dirty.includes(dep) && dep !== "") {{dirty.push(dep)}}}});
+                    dirty.splice(dirty.indexOf({super_cds.name}), 1);"""
+                    
+            update_script += f"""
+                    {"; ".join(it.replace("!=", "=") for it in reflog_checks)};
+
+                }}
+            """
+
+        c = CustomJS(
             args={super_cds.name: super_cds.source for super_cds in self.super_cdss.values()},
             code=f"""
                 {callbacks}
+
+                var refLog = {{{",".join(f"'{graph_it}': {{}}" for graph_it in graph)}}};
+                var dirty = [];
+                var new_data;
+
+                function run_update_script() {{
+                    {update_script}
+
+                }}
+                setInterval(run_update_script, 330);
             """,
         )
+        doc.js_on_event(DocumentReady, c)

@@ -15,11 +15,11 @@ time_config = SuperCDS(
     ],
 )
 
-time_series = SuperCDS("time_series", [SuperCDSColumn(name="ts", js_type="number")], depends_on_columns=list(time_config.columns.values()))
+time_series = SuperCDS("time_series", [SuperCDSColumn(name="ts", js_type="number", initial_value=[0])], depends_on_columns=list(time_config.columns.values()))
 
 dataflow = SuperCDSDataflow(super_cdss=[time_config, time_series], js_dir=cds_callback_dir)
 
 if __name__ == "__main__":
     # dataflow.clear_js_files()
     # dataflow.update_signatures()
-    dataflow.propegate_loop()
+    dataflow._attach_loop()
