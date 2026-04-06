@@ -1,5 +1,6 @@
 from collections import defaultdict
 from enum import Enum, auto
+from inspect import get_annotations
 import os
 import re
 from typing import Any, Literal, get_args, get_origin
@@ -289,7 +290,7 @@ class SuperCDSMeta(type):
         if cls_name.startswith("_") or getattr(cls, "__abstract_cds__", False):
             return cls
 
-        annotations = dict(namespace.get("__annotations__", {}))
+        annotations = get_annotations(cls)
         input_type = namespace.get("input_type", InputType.Array)
         depends_spec = namespace.get("depends_on_columns", [])
 
