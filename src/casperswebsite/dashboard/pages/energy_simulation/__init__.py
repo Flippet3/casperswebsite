@@ -28,19 +28,25 @@ class EnergySimulationPage:
         bokeh_script, bokeh_divs = dataflow.get_components_and_script(plots)
         bokeh_sources = "".join(div for key, div in bokeh_divs.items() if key.startswith("source_"))
 
-        graphs = [{"div": bokeh_divs["dummy_fig"], "left": 750, "top": 250, "width": 200, "height": 100}]
+        graphs = [
+            {"div": bokeh_divs["wind_graph"], "left": 750, "top": 250, "width": 200, "height": 100},
+            {"div": bokeh_divs["solar_graph"], "left": 50, "top": 250, "width": 200, "height": 100},
+        ]
 
-
-        anchors = "\n".join(f'''  <div id="anchor-{i}" style="position:absolute; pointer-events: auto;">{graph["div"]}</div>''' for (i, graph) in enumerate(graphs))
+        anchors = "\n".join(
+            f"""  <div id="anchor-{i}" style="position:absolute; pointer-events: auto;">{graph["div"]}</div>""" for (i, graph) in enumerate(graphs)
+        )
         anchor_vars = "\n".join(f"    const anchor_{i} = document.getElementById('anchor-{i}');" for i in range(len(graphs)))
-        anchor_rescales = "".join(f"""
+        anchor_rescales = "".join(
+            f"""
         anchor_{i}.style.left = ({graph["left"]} * scaleX) + "px";
         anchor_{i}.style.top = ({graph["top"]} * scaleY) + "px";
         anchor_{i}.style.width = ({graph["width"]} * scaleX) + "px";
-        anchor_{i}.style.height = ({graph["height"]} * scaleY) + "px";""" for (i, graph) in enumerate(graphs))
+        anchor_{i}.style.height = ({graph["height"]} * scaleY) + "px";"""
+            for (i, graph) in enumerate(graphs)
+        )
 
-        svg_and_layers = (
-            f"""
+        svg_and_layers = f"""
 <div class="stage" style="position: relative; width: 100%; aspect-ratio: 1000 / 600; overflow: hidden;">
   <canvas id="energy-canvas" width="1000" height="600" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></canvas>
   {anchors}
@@ -50,7 +56,7 @@ class EnergySimulationPage:
     {anchor_vars}
     const canvas = document.getElementById('energy-canvas');
     const ctx = canvas.getContext('2d');
-    const plotDesign = {{ left: 120, top: 80, width: {self.WIDTH//2}, height: 200 }};
+    const plotDesign = {{ left: 120, top: 80, width: {self.WIDTH // 2}, height: 200 }};
 
     function syncPlotFrame() {{
         const w = stage.clientWidth;
@@ -67,11 +73,10 @@ class EnergySimulationPage:
     }}
 
     new ResizeObserver(resizeAndRedraw).observe(stage);
-    drawGraphic(ctx);
+    // drawGraphic(ctx);
     resizeAndRedraw();
 </script>
 """
-        )
         header_html = f"<script>{DRAW_GRAPHIC_FUNC}</script>" + bokeh_script + bokeh_sources
         return PageInfo(
             category=OverViewCategory.EnergySimulation,
@@ -84,10 +89,10 @@ class EnergySimulationPage:
                         ContainerInfo(
                             width=12,
                             embed_type=EmbedType.Text,
-                            content="This is my pet project for visualizing a little scene and explaining the energy markets / energy production "
+                            content="This is my pet project for visualizing a little scene and explaining the energy markets / energy production ",
                             # content="""
-                            #     Casper is my name, and power is my game. 
-                            #     Domain-wise, I've learned a lot about electricity markets and renewable power generation. 
+                            #     Casper is my name, and power is my game.
+                            #     Domain-wise, I've learned a lot about electricity markets and renewable power generation.
                             #     Skill-wise, I've learned a lot about visualization of data and creating dashboards. This is a page to combine the two!
                             #     <br><br>
                             #     I've made a little scene that visualizes some energy production and demand.

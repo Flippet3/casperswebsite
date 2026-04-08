@@ -10,6 +10,9 @@ from casperswebsite.bokeh_dataflows import (
 _cds_callback_dir = os.path.join(os.path.dirname(__file__), "cds_callbacks")
 
 
+START_DT = 365.25 * 24 * 3600 / 4 - 6 * 60 * 60
+
+
 class TimeConfig(metaclass=SuperCDSMeta):
     __cds_name__ = "time_config"
 
@@ -19,7 +22,7 @@ class TimeConfig(metaclass=SuperCDSMeta):
 
 
 class TimeSeries(metaclass=SuperCDSMeta):
-    ts: Literal["number"] = [0]
+    ts: Literal["number"] = [START_DT]
     input_type = InputType.Array
     depends_on_columns = []
 
@@ -37,7 +40,7 @@ class WeibullBins(metaclass=SuperCDSMeta):
     depends_on_columns = [WindConfig]
 
 class WindData(metaclass=SuperCDSMeta):
-    ts: Literal["number"] = [0]
+    ts: Literal["number"] = [START_DT]
     target_bin: Literal["number"] = [5]
     speed: Literal["number"] = [5]
 
@@ -50,6 +53,20 @@ class WindDistance(metaclass=SuperCDSMeta):
 
     input_type = InputType.SingleValue
     depends_on_columns = [WindData.speed, WindData.ts]
+
+class GeoConfig(metaclass=SuperCDSMeta):
+    latitude: Literal["number"] = [50]
+
+    input_type = InputType.SingleValue
+
+
+class SunIntensity(metaclass=SuperCDSMeta):
+    ts: Literal["number"] = [START_DT]
+    intensity: Literal["number"] = [0]
+    zenith: Literal["number"] = [0]
+
+    input_type = InputType.Array
+    depends_on_columns = [TimeSeries, GeoConfig.latitude]
 
 
 dataflow = SuperCDSDataflow(
@@ -74,7 +91,12 @@ dataflow = SuperCDSDataflow(
         {TimeSeries.super_cds.name}.data = {{
             "ts": engine_ts
         }}
-        drawGraphic(ctx, {TimeSeries.super_cds.name}.data.{TimeSeries.ts}[{TimeSeries.super_cds.name}.data.{TimeSeries.ts}.length - 1], {WindDistance.wind_distance.linked_column.js_input});
+        drawGraphic(
+            ctx, 
+            {TimeSeries.super_cds.name}.data.{TimeSeries.ts}[{TimeSeries.super_cds.name}.data.{TimeSeries.ts}.length - 1], 
+            {WindDistance.wind_distance.linked_column.js_input},
+            {SunIntensity.super_cds.name}.data.{SunIntensity.zenith}[{SunIntensity.super_cds.name}.data.{SunIntensity.zenith}.length - 1], 
+        );
     """,
 )
 

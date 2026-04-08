@@ -63,4 +63,22 @@ class WindDistance(metaclass=SuperCDSMeta):
     input_type: InputType
     depends_on_columns: list[Any]
 
+class GeoConfig(metaclass=SuperCDSMeta):
+    input_type: InputType
+    latitude: AnnotatedStr
+    source: ColumnDataSource
+    super_cds: SuperCDS
+    input_type: InputType
+
+class SunIntensity(metaclass=SuperCDSMeta):
+    depends_on_columns: list
+    input_type: InputType
+    intensity: AnnotatedStr
+    source: ColumnDataSource
+    super_cds: SuperCDS
+    ts: AnnotatedStr
+    zenith: AnnotatedStr
+    input_type: InputType
+    depends_on_columns: list[Any]
+
 dataflow: SuperCDSDataflow
