@@ -73,7 +73,6 @@ class EnergySimulationPage:
     }}
 
     new ResizeObserver(resizeAndRedraw).observe(stage);
-    // drawGraphic(ctx);
     resizeAndRedraw();
 </script>
 """

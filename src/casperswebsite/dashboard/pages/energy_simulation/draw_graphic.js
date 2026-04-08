@@ -17,14 +17,8 @@ function seededRandom(seed) {
  * @param {number} wind_distance - Aggregate of wind_speed * time.
  */
 function drawGraphic(ctx, ts, wind_distance, zenith) {
-    // ts = ts === undefined ? 0 : ts;
     let dt = new Date((ts) * 1000);
     let sun_x_percentage = (dt.getUTCHours() * 3600 + dt.getUTCMinutes() * 60 + dt.getUTCSeconds()) / 86400;
-    let startOfYear = Date.UTC(dt.getUTCFullYear(), 0, 0);
-    let dayOfYear = Math.floor((dt.getTime() - startOfYear) / 86400000);
-    let offset = Math.cos(2 * Math.PI * (dayOfYear - 172) / 365) * Math.sqrt(3) / 2;
-    // let sun_y_percentage = offset + Math.cos(2 * Math.PI * sun_x_percentage + Math.PI);
-    // console.log(Math.acos(zenith));
     let sun_y_percentage = zenith;
     let sun_x = (-0.2 + 1.4 * sun_x_percentage) * ctx.canvas.width;
     let sun_y = ctx.canvas.height * 2 / 3 - sun_y_percentage * ctx.canvas.height / 3;
@@ -33,12 +27,9 @@ function drawGraphic(ctx, ts, wind_distance, zenith) {
     let brightness = raw_brightness * (1 - min_brightness) + min_brightness;
 
     function brightnessAdjustedHSLA(hue, sat, lightness, alpha) {
-        // Lightness is between 0 (black) and 100 (white)
-        // We'll interpolate between the provided lightness and 100
         let adjustedLightness = lightness * brightness;
         let adjustedSaturation = sat * brightness;
    
-        // Clamp adjustedLightness and adjustedSaturation between 0 and 100, and ensure they are integers
         adjustedLightness = Math.max(0, Math.min(100, adjustedLightness));
         adjustedSaturation = Math.max(0, Math.min(100, adjustedSaturation));
 
