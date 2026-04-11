@@ -1,9 +1,9 @@
 from typing import Any
-from casperswebsite.bokeh_dataflows import SuperCDSDataflow, SuperCDSMeta
-from casperswebsite.bokeh_dataflows import AnnotatedStr
-from casperswebsite.bokeh_dataflows import InputType
+from bokeh_cdsflow import SuperCDSDataflow, SuperCDSMeta
+from bokeh_cdsflow import AnnotatedStr
+from bokeh_cdsflow import InputType
 from bokeh.models.sources import ColumnDataSource
-from casperswebsite.bokeh_dataflows import SuperCDS
+from bokeh_cdsflow import SuperCDS
 
 class TimeConfig(metaclass=SuperCDSMeta):
     dt: AnnotatedStr

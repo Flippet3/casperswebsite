@@ -1,7 +1,7 @@
 import os
 from typing import Literal
 
-from casperswebsite.bokeh_dataflows import (
+from bokeh_cdsflow import (
     InputType,
     SuperCDSDataflow,
     SuperCDSMeta,
@@ -108,7 +108,7 @@ if __name__ == "__main__":
         stub_path = os.path.join(os.path.dirname(__file__), "cds.pyi")
         imports = [
             "from typing import Any",
-            "from casperswebsite.bokeh_dataflows import SuperCDSDataflow, SuperCDSMeta",
+            "from bokeh_cdsflow import SuperCDSDataflow, SuperCDSMeta",
         ]
         lines = [
             "",

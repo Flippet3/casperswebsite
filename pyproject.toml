@@ -7,7 +7,12 @@ requires-python = ">=3.11"
 dependencies = [
     "bokeh==3.9.0",
     "pydantic==2.12.5",
+    "bokeh-cdsflow>=0.1.0",
 ]
+
+[tool.uv.sources]
+# Use `uv sync --no-sources` (or `UV_NO_SOURCES=1`) to ignore this and install from PyPI instead.
+bokeh-cdsflow = { path = "../bokeh-cdsflow", editable = true }
 
 [build-system]
 requires = ["hatchling"]
