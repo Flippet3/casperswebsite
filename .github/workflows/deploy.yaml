@@ -25,4 +25,4 @@ jobs:
 
       - name: Deploy to Droplet
         run: |
-          ssh flippet3@caspersweb.site "cd ~/casperswebsite && git pull && /home/flippet3/.local/bin/uv sync --no-source --upgrade && source .venv/bin/activate && python -m casperswebsite.compile_dashboard"
+          ssh flippet3@caspersweb.site "cd ~/casperswebsite && git pull && /home/flippet3/.local/bin/uv sync --no-sources --upgrade && source .venv/bin/activate && python -m casperswebsite.compile_dashboard"
