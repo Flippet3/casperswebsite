@@ -1,10 +1,10 @@
 import os
-from typing import Literal
 
 from bokeh_cdsflow import (
+    CdsFlowBase,
+    CdsFlowManager,
+    CdsFlowStr,
     InputType,
-    SuperCDSDataflow,
-    SuperCDSMeta,
 )
 
 _cds_callback_dir = os.path.join(os.path.dirname(__file__), "cds_callbacks")
@@ -13,67 +13,73 @@ _cds_callback_dir = os.path.join(os.path.dirname(__file__), "cds_callbacks")
 START_DT = 365.25 * 24 * 3600 / 4 - 6 * 60 * 60
 
 
-class TimeConfig(metaclass=SuperCDSMeta):
-    __cds_name__ = "time_config"
-
-    dt: Literal["number"] = [900]
-    max_ts: Literal["number"] = [100]
+class TimeConfig(CdsFlowBase):
+    dt: CdsFlowStr = "number", [900]  # type: ignore[assignment]
+    max_ts: CdsFlowStr = "number", [100]  # type: ignore[assignment]
     input_type = InputType.SingleValue
 
 
-class TimeSeries(metaclass=SuperCDSMeta):
-    ts: Literal["number"] = [START_DT]
+class TimeSeries(CdsFlowBase):
+    ts: CdsFlowStr = "number", [START_DT]  # type: ignore[assignment]
     input_type = InputType.Array
     depends_on_columns = []
 
-class WindConfig(metaclass=SuperCDSMeta):
-    A: Literal["number"] = [7]
-    k: Literal["number"] = [2]
-    min_bin: Literal["number"] = [0]
-    max_bin: Literal["number"] = [30]
-    nr_bins: Literal["number"] = [40]
+
+class WindConfig(CdsFlowBase):
+    A: CdsFlowStr = "number", [7]  # type: ignore[assignment]
+    k: CdsFlowStr = "number", [2]  # type: ignore[assignment]
+    min_bin: CdsFlowStr = "number", [0]  # type: ignore[assignment]
+    max_bin: CdsFlowStr = "number", [30]  # type: ignore[assignment]
+    nr_bins: CdsFlowStr = "number", [40]  # type: ignore[assignment]
     input_type = InputType.SingleValue
 
-class WeibullBins(metaclass=SuperCDSMeta):
-    edges: Literal["number"] = []
+
+class WeibullBins(CdsFlowBase):
+    edges: CdsFlowStr = "number", []  # type: ignore[assignment]
     input_type = InputType.Array
     depends_on_columns = [WindConfig]
 
-class WindData(metaclass=SuperCDSMeta):
-    ts: Literal["number"] = [START_DT]
-    target_bin: Literal["number"] = [5]
-    speed: Literal["number"] = [5]
+
+class WindData(CdsFlowBase):
+    ts: CdsFlowStr = "number", [START_DT]  # type: ignore[assignment]
+    target_bin: CdsFlowStr = "number", [5]  # type: ignore[assignment]
+    speed: CdsFlowStr = "number", [5]  # type: ignore[assignment]
 
     input_type = InputType.Array
     depends_on_columns = [WeibullBins, TimeSeries]
 
-class WindDistance(metaclass=SuperCDSMeta):
-    wind_distance: Literal["number"] = [0]
-    watermark: Literal["number"] = [0]
+
+class WindDistance(CdsFlowBase):
+    wind_distance: CdsFlowStr = "number", [0]  # type: ignore[assignment]
+    watermark: CdsFlowStr = "number", [0]  # type: ignore[assignment]
 
     input_type = InputType.SingleValue
     depends_on_columns = [WindData.speed, WindData.ts]
 
-class GeoConfig(metaclass=SuperCDSMeta):
-    latitude: Literal["number"] = [50]
+
+class GeoConfig(CdsFlowBase):
+    latitude: CdsFlowStr = "number", [50]  # type: ignore[assignment]
 
     input_type = InputType.SingleValue
 
 
-class SunIntensity(metaclass=SuperCDSMeta):
-    ts: Literal["number"] = [START_DT]
-    intensity: Literal["number"] = [0]
-    zenith: Literal["number"] = [0]
+class SunIntensity(CdsFlowBase):
+    ts: CdsFlowStr = "number", [START_DT]  # type: ignore[assignment]
+    intensity: CdsFlowStr = "number", [0]  # type: ignore[assignment]
+    zenith: CdsFlowStr = "number", [0]  # type: ignore[assignment]
 
     input_type = InputType.Array
     depends_on_columns = [TimeSeries, GeoConfig.latitude]
 
 
-dataflow = SuperCDSDataflow(
-    super_cdss=[
-        cls.super_cds
+dataflow = CdsFlowManager(
+    cds_flows=[
+        cls.cds_flow
         for cls in globals().values()
-        if isinstance(cls, type) and hasattr(cls, "super_cds")
+        if isinstance(cls, type)
+        and cls is not CdsFlowBase
+        and issubclass(cls, CdsFlowBase)
+        and getattr(cls, "cds_flow", None) is not None
     ],
     js_dir=_cds_callback_dir,
     tick_ms=33,
@@ -82,67 +88,24 @@ dataflow = SuperCDSDataflow(
         const ctx = canvas.getContext('2d');
     """,
     engine_code=f"""
-        var engine_ts = [...{TimeSeries.super_cds.name}.data.{TimeSeries.ts}] 
+        var engine_ts = [...{TimeSeries.cds_flow.name}.data.{TimeSeries.ts}] 
         var last_val = engine_ts[engine_ts.length - 1];
-        engine_ts.push(last_val + {TimeConfig.super_cds.name}.data.{TimeConfig.dt}[0]);
-        while (engine_ts.length > {TimeConfig.super_cds.name}.data.{TimeConfig.max_ts}[0]) {{
+        engine_ts.push(last_val + {TimeConfig.cds_flow.name}.data.{TimeConfig.dt}[0]);
+        while (engine_ts.length > {TimeConfig.cds_flow.name}.data.{TimeConfig.max_ts}[0]) {{
             engine_ts.shift();
         }}
-        {TimeSeries.super_cds.name}.data = {{
+        {TimeSeries.cds_flow.name}.data = {{
             "ts": engine_ts
         }}
         drawGraphic(
             ctx, 
-            {TimeSeries.super_cds.name}.data.{TimeSeries.ts}[{TimeSeries.super_cds.name}.data.{TimeSeries.ts}.length - 1], 
+            {TimeSeries.cds_flow.name}.data.{TimeSeries.ts}[{TimeSeries.cds_flow.name}.data.{TimeSeries.ts}.length - 1], 
             {WindDistance.wind_distance.linked_column.js_input},
-            {SunIntensity.super_cds.name}.data.{SunIntensity.zenith}[{SunIntensity.super_cds.name}.data.{SunIntensity.zenith}.length - 1], 
+            {SunIntensity.cds_flow.name}.data.{SunIntensity.zenith}[{SunIntensity.cds_flow.name}.data.{SunIntensity.zenith}.length - 1], 
         );
     """,
 )
 
+
 if __name__ == "__main__":
     dataflow.update_signatures()
-    import inspect
-
-    def write_stub():
-        stub_path = os.path.join(os.path.dirname(__file__), "cds.pyi")
-        imports = [
-            "from typing import Any",
-            "from bokeh_cdsflow import SuperCDSDataflow, SuperCDSMeta",
-        ]
-        lines = [
-            "",
-        ]
-
-        current_globals = globals()
-        for name, obj in current_globals.items():
-            if inspect.isclass(obj) and getattr(obj, "__class__", None) is not None:
-                if getattr(obj, "__class__", None).__name__ == "SuperCDSMeta":
-                    lines.append(f"class {name}(metaclass=SuperCDSMeta):")
-                    for field_name in dir(obj):
-                        if field_name.startswith("_"):
-                            continue
-                        attr = getattr(obj, field_name)
-                        # Add the type line with just the type (not as a string), and ensure import
-                        attr_type = type(attr)
-                        type_module = attr_type.__module__
-                        type_name = attr_type.__name__
-                        if type_module == "builtins":
-                            import_line = None
-                        else:
-                            import_line = f"from {type_module} import {type_name}"
-                            if import_line not in imports:
-                                imports.append(import_line)
-                        lines.append(f"    {field_name}: {type_name}")
-
-                    # Add extra class attributes if present
-                    if hasattr(obj, "input_type"):
-                        lines.append("    input_type: InputType")
-                    if hasattr(obj, "depends_on_columns"):
-                        lines.append("    depends_on_columns: list[Any]")
-                    lines.append("")
-        lines.append("dataflow: SuperCDSDataflow")
-        with open(stub_path, "w") as f:
-            f.write("\n".join(imports + lines))
-
-    write_stub()
