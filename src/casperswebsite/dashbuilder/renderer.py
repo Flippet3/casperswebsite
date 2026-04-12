@@ -12,7 +12,7 @@ def render_pages(pages: list[Page]) -> dict[str, str]:
     for page_info in page_infos:
         categories_map[page_info.category].append(page_info)
     for overview_category, category_pages in categories_map.items():
-        if overview_category == OverViewCategory.Shirt:
+        if overview_category == OverViewCategory.Hidden:
             continue
         if len(category_pages) == 1:
             menu_options.append(
@@ -41,7 +41,7 @@ def render_pages(pages: list[Page]) -> dict[str, str]:
         rendered = template.render(
             title=page_info.title,
             header_html=page_info.header_html,
-            menu_options=menu_options,
+            menu_options=menu_options if page_info.category != OverViewCategory.Hidden else [],
             cards=page_info.cards,
         )
         rendered_pages[page_info.href] = rendered

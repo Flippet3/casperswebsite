@@ -10,6 +10,11 @@ os.chdir(static_folder)
 Handler = http.server.SimpleHTTPRequestHandler
 
 def serve_static():
+    # Call fuser -k 8080/tcp before serving, to kill anything using the port (works on Linux).
+    try:
+        os.system(f"fuser -k {PORT}/tcp")
+    except Exception as e:
+        print(f"Warning: Could not run fuser to kill processes on port 8080: {e}")
     with socketserver.TCPServer(("", PORT), Handler) as httpd:
         print(f"Serving static files at http://localhost:{PORT}/ from {static_folder}")
         try:

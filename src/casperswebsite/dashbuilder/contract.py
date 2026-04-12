@@ -9,7 +9,7 @@ class OverViewCategory(Enum):
     HowItsMade = "How It's Made"
     AuthorsPage = "Author's Page"
     Tools = "Tools"
-    Shirt = "Shirt"
+    Hidden = "Hidden"
     EnergySimulation = "Energy Simulation"
 
 
