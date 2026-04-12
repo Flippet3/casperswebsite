@@ -159,6 +159,18 @@ class Jasmin:
                             True,
                             "Omg, you betch, you look so skinny!",
                         ),
+                        r"(?i)^s[^t].*y$": (
+                            False,
+                            "Wild name. I'm looking for someone more like St__y!",
+                        ),
+                        r"(?i)^st[^a].*y$": (
+                            False,
+                            "Wild name. I'm looking for someone more like Sta_y!",
+                        ),
+                        r"(?i)^sta.*y$": (
+                            False,
+                            "Wow, you almost sound like my friend Stacy! She ate a whole almond once, fat slut.",
+                        ),
                         r"(?i)^caim[aá]n$": (
                             False,
                             "Cute, but no - not how your Peruvian family knows you."
