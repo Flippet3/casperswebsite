@@ -212,6 +212,89 @@ class Jasmin:
                     },
                 ),
                 FlowStep(
+                    question="How many days have we known each other?",
+                    rules={
+                        r"^([1-9][0-9]{0,2}|1[0-4][0-9]{2})$": (False, "Much longer..."),
+                        r"^(1[5][0-9]{2}|16[0-4][0-9])$": (False, "Almost!"),
+                        r"^1702$": (True, "Yep! I had to scroll for 15 minutes through facebook messages to see our first message..."),
+                        r"^(16[5-9][0-9]|17[0-4][0-9]|1750)$": (True, "Close enough! It's 1702 - I had to scroll for 15 minutes through facebook messages to see our first message..."),
+                        r"^(17[5-9][0-9]|18[0-9]{2}|19[0-9]{2}|[2-9][0-9]{3,}|[1-9][0-9]{4,})$": (False, "not there (yet) 👉👈"),
+                        r".*": (False, "I only understand numbers. :("),
+                    },
+                ),
+                FlowStep(
+                    question="What was your first message to me?",
+                    rules={
+                        r"(?i)^sorry who are you\?$": (
+                            True,
+                            "Damn... did you also scroll for 15 minutes?"
+                        ),
+                        r".*": (True, "It was 'Sorry who are you?'"),
+                    },
+                ),
+                FlowStep(
+                    question="What was the third?",
+                    rules={
+                        r"(?i)^message failed\. you will be reported to the police if this harrassment continues\.$": (
+                            True,
+                            "Jep... that was pretty fucking tough."
+                        ),
+                        r".*": (True, "It was 'Message failed. You will be reported to the police if this harrassment continues.'"),
+                    },
+                ),
+                FlowStep(
+                    question="And the fourth? (last I'll ask about)",
+                    rules={
+                        r"(?i)^Please click here to join the sex offenders register: www\.cantbearoundkids\.com$": (
+                            True,
+                            "I'm phenomenal with kids, if you must know."
+                        ),
+                        r".*": (True, "It was 'Please click here to join the sex offenders register: www.cantbearoundkids.com'. It linked to a website with just my face for some reason?"),
+                    },
+                ),
+                FlowStep(
+                    question="Are you super important to me?",
+                    rules={
+                        r"(?i)^yes$": (
+                            True,
+                            "Big ego, huh?"
+                        ),
+                        r"(?i)^no$": (
+                            False,
+                            "Try again!"
+                        ),
+                        r".*": (False, "Please answer yes or no."),
+                    },
+                ),
+                FlowStep(
+                    question="Am I super happy to have you in my life, even if only a few times a year?",
+                    rules={
+                        r"(?i)^yes$": (
+                            True,
+                            "Sjeesh, ever heard of humble?"
+                        ),
+                        r"(?i)^no$": (
+                            False,
+                            "Try again!"
+                        ),
+                        r".*": (False, "Please answer yes or no."),
+                    },
+                ),
+                FlowStep(
+                    question="To goof or not to goof?",
+                    rules={
+                        r"(?i)^(?:to )?goof$": (
+                            True,
+                            "XD XD XD ROFL"
+                        ),
+                        r"(?i)^not to goof$": (
+                            False,
+                            "But why not goof :(?"
+                        ),
+                        r".*": (False, "Please answer 'to goof' or 'not to goof'."),
+                    },
+                ),
+                FlowStep(
                     question="Imagine you'd ranked all of your friends by how much they mean to you -- what's the name of someone who would definitely make it in the top 300?",
                     rules={
                         r"(?i)casper": (
