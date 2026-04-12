@@ -2,6 +2,7 @@ import os
 
 from casperswebsite.dashboard.pages.energy_simulation.cds import dataflow
 from casperswebsite.dashboard.pages.energy_simulation.graphs import get_plots
+from casperswebsite.dashboard.pages.energy_simulation.widgets import get_widgets
 from casperswebsite.dashbuilder.contract import (
     CardInfo,
     ContainerInfo,
@@ -24,13 +25,17 @@ class EnergySimulationPage:
 
     def build_page(self) -> PageInfo:
         plots = get_plots()
+        widgets = get_widgets()
+        dom_elements = {**plots, **widgets}
 
-        bokeh_script, bokeh_divs = dataflow.get_components_and_script(plots)
+        bokeh_script, bokeh_divs = dataflow.get_components_and_script(dom_elements)
         bokeh_sources = "".join(div for key, div in bokeh_divs.items() if key.startswith("source_"))
 
         graphs = [
-            {"div": bokeh_divs["wind_graph"], "left": 750, "top": 250, "width": 200, "height": 100},
-            {"div": bokeh_divs["solar_graph"], "left": 50, "top": 250, "width": 200, "height": 100},
+            {"div": bokeh_divs["wind_graph"], "left": 220, "top": 10, "width": 200, "height": 100},
+            {"div": bokeh_divs["solar_graph"], "left": 10, "top": 10, "width": 200, "height": 100},
+            {"div": bokeh_divs["solar_load_graph"], "left": 10, "top": 120, "width": 200, "height": 100},
+            {"div": bokeh_divs["wind_load_graph"], "left": 220, "top": 120, "width": 200, "height": 100},
         ]
 
         anchors = "\n".join(
@@ -100,6 +105,16 @@ class EnergySimulationPage:
                             #     Can you optimize profit?!
                             # """,
                         ),
+                        ContainerInfo(
+                            width=6,
+                            embed_type=EmbedType.Html,
+                            content=bokeh_divs["solar_panel_area_slider"]
+                        ),
+                        ContainerInfo(
+                            width=6,
+                            embed_type=EmbedType.Html,
+                            content=bokeh_divs["nr_wind_turbines_slider"]
+                        )
                     ],
                 ),
                 CardInfo(

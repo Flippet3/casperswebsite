@@ -14,62 +14,71 @@ START_DT = 365.25 * 24 * 3600 / 4 - 6 * 60 * 60
 
 
 class TimeConfig(CdsFlowBase):
-    dt: CdsFlowStr = "number", [900]  # type: ignore[assignment]
-    max_ts: CdsFlowStr = "number", [100]  # type: ignore[assignment]
+    dt: CdsFlowStr = "number", [900]
+    max_ts: CdsFlowStr = "number", [100]
     input_type = InputType.SingleValue
 
 
 class TimeSeries(CdsFlowBase):
-    ts: CdsFlowStr = "number", [START_DT]  # type: ignore[assignment]
+    ts: CdsFlowStr = "number", [START_DT]
     input_type = InputType.Array
     depends_on_columns = []
 
 
 class WindConfig(CdsFlowBase):
-    A: CdsFlowStr = "number", [7]  # type: ignore[assignment]
-    k: CdsFlowStr = "number", [2]  # type: ignore[assignment]
-    min_bin: CdsFlowStr = "number", [0]  # type: ignore[assignment]
-    max_bin: CdsFlowStr = "number", [30]  # type: ignore[assignment]
-    nr_bins: CdsFlowStr = "number", [40]  # type: ignore[assignment]
+    A: CdsFlowStr = "number", [8]
+    k: CdsFlowStr = "number", [2]
+    min_bin: CdsFlowStr = "number", [0]
+    max_bin: CdsFlowStr = "number", [30]
+    nr_bins: CdsFlowStr = "number", [40]
+    rated_ws: CdsFlowStr = "number", [11]
+    input_type = InputType.SingleValue
+
+
+class LoadConfig(CdsFlowBase):
+    solar_panel_area: CdsFlowStr = "number", [100000]
+    nr_5mw_tubrines: CdsFlowStr = "number", [100]
     input_type = InputType.SingleValue
 
 
 class WeibullBins(CdsFlowBase):
-    edges: CdsFlowStr = "number", []  # type: ignore[assignment]
+    edges: CdsFlowStr = "number", []
     input_type = InputType.Array
     depends_on_columns = [WindConfig]
 
 
 class WindData(CdsFlowBase):
-    ts: CdsFlowStr = "number", [START_DT]  # type: ignore[assignment]
-    target_bin: CdsFlowStr = "number", [5]  # type: ignore[assignment]
-    speed: CdsFlowStr = "number", [5]  # type: ignore[assignment]
+    ts: CdsFlowStr = "number", [START_DT]
+    target_bin: CdsFlowStr = "number", [5]
+    speed: CdsFlowStr = "number", [5]
+    load: CdsFlowStr = "number", [0]
 
     input_type = InputType.Array
-    depends_on_columns = [WeibullBins, TimeSeries]
+    depends_on_columns = [WeibullBins, TimeSeries, LoadConfig.nr_5mw_tubrines, WindConfig.rated_ws]
 
 
 class WindDistance(CdsFlowBase):
-    wind_distance: CdsFlowStr = "number", [0]  # type: ignore[assignment]
-    watermark: CdsFlowStr = "number", [0]  # type: ignore[assignment]
+    wind_distance: CdsFlowStr = "number", [0]
+    watermark: CdsFlowStr = "number", [0]
 
     input_type = InputType.SingleValue
     depends_on_columns = [WindData.speed, WindData.ts]
 
 
 class GeoConfig(CdsFlowBase):
-    latitude: CdsFlowStr = "number", [50]  # type: ignore[assignment]
+    latitude: CdsFlowStr = "number", [50]
 
     input_type = InputType.SingleValue
 
 
 class SunIntensity(CdsFlowBase):
-    ts: CdsFlowStr = "number", [START_DT]  # type: ignore[assignment]
-    intensity: CdsFlowStr = "number", [0]  # type: ignore[assignment]
-    zenith: CdsFlowStr = "number", [0]  # type: ignore[assignment]
+    ts: CdsFlowStr = "number", [START_DT]
+    intensity: CdsFlowStr = "number", [0]
+    zenith: CdsFlowStr = "number", [0]
+    load: CdsFlowStr = "number", [0]
 
     input_type = InputType.Array
-    depends_on_columns = [TimeSeries, GeoConfig.latitude]
+    depends_on_columns = [TimeSeries, GeoConfig.latitude, LoadConfig.solar_panel_area]
 
 
 dataflow = CdsFlowManager(

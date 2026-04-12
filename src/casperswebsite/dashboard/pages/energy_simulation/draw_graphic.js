@@ -21,7 +21,7 @@ function drawGraphic(ctx, ts, wind_distance, zenith) {
     let sun_x_percentage = (dt.getUTCHours() * 3600 + dt.getUTCMinutes() * 60 + dt.getUTCSeconds()) / 86400;
     let sun_y_percentage = zenith;
     let sun_x = (-0.2 + 1.4 * sun_x_percentage) * ctx.canvas.width;
-    let sun_y = ctx.canvas.height * 2 / 3 - sun_y_percentage * ctx.canvas.height / 3;
+    let sun_y = ctx.canvas.height * 5 / 6 - sun_y_percentage * ctx.canvas.height * 2 / 3;
     const min_brightness = 0.8
     let raw_brightness = (1 / (1 + Math.exp(-10 * (sun_y_percentage - 0.1))));
     let brightness = raw_brightness * (1 - min_brightness) + min_brightness;
@@ -40,13 +40,13 @@ function drawGraphic(ctx, ts, wind_distance, zenith) {
     function drawSky() {
         // Sky (top 2/3)
         ctx.fillStyle = brightnessAdjustedHSLA(204, 100, 83, 1); // #a8ddff
-        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height * 2 / 3);
+        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height * 5 / 6);
     }
 
     function drawGround() {
         // Grass (bottom 1/3)
         ctx.fillStyle = brightnessAdjustedHSLA(105, 54, 59, 1); // #6dcc57
-        ctx.fillRect(0, ctx.canvas.height * 2 / 3, ctx.canvas.width, ctx.canvas.height / 3);
+        ctx.fillRect(0, ctx.canvas.height * 5 / 6, ctx.canvas.width, ctx.canvas.height / 6);
     }
 
     /**
@@ -287,6 +287,6 @@ function drawGraphic(ctx, ts, wind_distance, zenith) {
     }
 
     const rand = seededRandom(ts);
-    drawTurbine(700, 350, 1, wind_distance / 50);
-    drawSolarPanels(300, 420, 1);
+    drawTurbine(325, 450, 1, wind_distance / 10);
+    drawSolarPanels(120, 520, 1);
 }
