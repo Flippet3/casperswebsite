@@ -163,7 +163,11 @@ class Jasmin:
                             False,
                             "Cute, but no - not how your Peruvian family knows you."
                         ),
-                   
+                        r"(?i)^casper$": (
+                            False,
+                            "No! That's me, you goofball!"
+                        ),
+
                         r".*": (False, "I'm not sure this site was made for you. Go away!")
                     },
                 ),
@@ -181,7 +185,7 @@ class Jasmin:
                 FlowStep(
                     question="What's the ideal age?",
                     rules={
-                        r"^25$": (False, "Soooo 2025."),
+                        r"^25$": (False, "Sooooooo 2025."),
                         r"^26$": (False, "Almost. Second best, I'd say! I mean, it's good, but it's not the peak of humanity."),
                         r"^30$": (True, "Your words, not mine..."),
                         r"^([3-9][0-9]|[1-9][0-9]{2,})$": (False, "Naah, way to old!"),
@@ -239,7 +243,7 @@ class Jasmin:
                             True,
                             "Jep... that was pretty fucking tough."
                         ),
-                        r".*": (True, "It was 'Message failed. You will be reported to the police if this harrassment continues.'"),
+                        r".*": (True, "It was 'Message failed. You will be reported to the police if this harrassment continues.' Not sure why I kept messaging at this point."),
                     },
                 ),
                 FlowStep(
@@ -253,7 +257,7 @@ class Jasmin:
                     },
                 ),
                 FlowStep(
-                    question="Are you super important to me?",
+                    question="Okay, but it did get better from there. Like, are you super important to me now?",
                     rules={
                         r"(?i)^yes$": (
                             True,
@@ -281,7 +285,7 @@ class Jasmin:
                     },
                 ),
                 FlowStep(
-                    question="To goof or not to goof?",
+                    question="Let's try something less personal. To goof or not to goof?",
                     rules={
                         r"(?i)^(?:to )?goof$": (
                             True,
@@ -321,7 +325,7 @@ class Jasmin:
                         ContainerInfo(
                             width=12,
                             embed_type=EmbedType.Text,
-                            content="Welcome to a super straight-forward quiz. No need to be smart or cheeky, just answer normally! Please. Like, omg, for real.",
+                            content="Welcome to a super straight-forward quiz. There's no easter eggs in any of the questions at all, so there's no need to be smart or cheeky -- just answer normally!",
                         ),
                         ContainerInfo(
                             width=12,
