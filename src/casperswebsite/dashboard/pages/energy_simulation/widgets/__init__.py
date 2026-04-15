@@ -3,7 +3,7 @@ from bokeh.models.dom import DOMElement
 from bokeh.models import CustomJS, Slider
 from bokeh.models.formatters import CustomJSTickFormatter
 
-from casperswebsite.dashboard.pages.energy_simulation.cds import LoadConfig
+from casperswebsite.dashboard.pages.energy_simulation.cds import load_config
 
 
 def get_widgets() -> dict[str, DOMElement]:
@@ -11,26 +11,26 @@ def get_widgets() -> dict[str, DOMElement]:
         title="Solar panel area (m^2)",
         start=0,
         end=6,
-        value=math.log10(LoadConfig.solar_panel_area.linked_column.cds_flow_column.initial_value[0]),
+        value=math.log10(load_config.solar_panel_area.initial_value[0]),
         step=0.1,
         format=CustomJSTickFormatter(code="return Math.round(Math.pow(10, tick));"),
     )
     solar_panel_area_slider.js_on_change(
         "value",
         CustomJS(
-            args={LoadConfig.cds_flow.name: LoadConfig.source},
-            code=f"""{LoadConfig.set_value_str({LoadConfig.solar_panel_area: "[Math.pow(10, cb_obj.value)]"})}""",
+            args={load_config.name: load_config.source},
+            code=f"""{load_config.set_value_str({load_config.solar_panel_area: "[Math.pow(10, cb_obj.value)]"})}""",
         ),
     )
 
     nr_wind_turbines_slider = Slider(
-        title="Nr wind Turbines (5MW)", start=0, end=3, value=math.log10(LoadConfig.nr_5mw_tubrines.linked_column.cds_flow_column.initial_value[0]), step=0.1, format=CustomJSTickFormatter(code="return Math.round(Math.pow(10, tick));")
+        title="Nr wind Turbines (5MW)", start=0, end=3, value=math.log10(load_config.nr_5mw_tubrines.initial_value[0]), step=0.1, format=CustomJSTickFormatter(code="return Math.round(Math.pow(10, tick));")
     )
     nr_wind_turbines_slider.js_on_change(
         "value",
         CustomJS(
-            args={LoadConfig.cds_flow.name: LoadConfig.source},
-            code=f"""{LoadConfig.set_value_str({LoadConfig.nr_5mw_tubrines: "[Math.pow(10, cb_obj.value)]"})}""",
+            args={load_config.name: load_config.source},
+            code=f"""{load_config.set_value_str({load_config.nr_5mw_tubrines: "[Math.pow(10, cb_obj.value)]"})}""",
         ),
     )
 

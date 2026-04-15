@@ -3,7 +3,7 @@ import os
 from bokeh_cdsflow import (
     CdsFlowBase,
     CdsFlowManager,
-    CdsFlowStr,
+    CdsFlowCol,
     InputType,
 )
 
@@ -14,82 +14,82 @@ START_DT = 365.25 * 24 * 3600 / 4 - 6 * 60 * 60
 
 
 class TimeConfig(CdsFlowBase):
-    dt: CdsFlowStr = "number", [900]
-    max_ts: CdsFlowStr = "number", [100]
+    dt = CdsFlowCol("number", [900])
+    max_ts = CdsFlowCol("number", [100])
     input_type = InputType.SingleValue
 
 
 class TimeSeries(CdsFlowBase):
-    ts: CdsFlowStr = "number", [START_DT]
+    ts = CdsFlowCol("number", [START_DT])
     input_type = InputType.Array
-    depends_on_columns = []
 
 
 class WindConfig(CdsFlowBase):
-    A: CdsFlowStr = "number", [8]
-    k: CdsFlowStr = "number", [2]
-    min_bin: CdsFlowStr = "number", [0]
-    max_bin: CdsFlowStr = "number", [30]
-    nr_bins: CdsFlowStr = "number", [40]
-    rated_ws: CdsFlowStr = "number", [11]
+    A = CdsFlowCol("number", [8])
+    k = CdsFlowCol("number", [2])
+    min_bin = CdsFlowCol("number", [0])
+    max_bin = CdsFlowCol("number", [30])
+    nr_bins = CdsFlowCol("number", [40])
+    rated_ws = CdsFlowCol("number", [11])
     input_type = InputType.SingleValue
 
 
 class LoadConfig(CdsFlowBase):
-    solar_panel_area: CdsFlowStr = "number", [100000]
-    nr_5mw_tubrines: CdsFlowStr = "number", [100]
+    solar_panel_area = CdsFlowCol("number", [100000])
+    nr_5mw_tubrines = CdsFlowCol("number", [100])
     input_type = InputType.SingleValue
 
 
 class WeibullBins(CdsFlowBase):
-    edges: CdsFlowStr = "number", []
+    edges = CdsFlowCol("number", [])
     input_type = InputType.Array
-    depends_on_columns = [WindConfig]
 
 
 class WindData(CdsFlowBase):
-    ts: CdsFlowStr = "number", [START_DT]
-    target_bin: CdsFlowStr = "number", [5]
-    speed: CdsFlowStr = "number", [5]
-    load: CdsFlowStr = "number", [0]
+    ts = CdsFlowCol("number", [START_DT])
+    target_bin = CdsFlowCol("number", [5])
+    speed = CdsFlowCol("number", [5])
+    load = CdsFlowCol("number", [0])
 
     input_type = InputType.Array
-    depends_on_columns = [WeibullBins, TimeSeries, LoadConfig.nr_5mw_tubrines, WindConfig.rated_ws]
 
 
 class WindDistance(CdsFlowBase):
-    wind_distance: CdsFlowStr = "number", [0]
-    watermark: CdsFlowStr = "number", [0]
+    wind_distance = CdsFlowCol("number", [0])
+    watermark = CdsFlowCol("number", [0])
 
     input_type = InputType.SingleValue
-    depends_on_columns = [WindData.speed, WindData.ts]
 
 
 class GeoConfig(CdsFlowBase):
-    latitude: CdsFlowStr = "number", [50]
+    latitude = CdsFlowCol("number", [50])
 
     input_type = InputType.SingleValue
 
 
 class SunIntensity(CdsFlowBase):
-    ts: CdsFlowStr = "number", [START_DT]
-    intensity: CdsFlowStr = "number", [0]
-    zenith: CdsFlowStr = "number", [0]
-    load: CdsFlowStr = "number", [0]
+    ts = CdsFlowCol("number", [START_DT])
+    intensity = CdsFlowCol("number", [0])
+    zenith = CdsFlowCol("number", [0])
+    load = CdsFlowCol("number", [0])
 
     input_type = InputType.Array
-    depends_on_columns = [TimeSeries, GeoConfig.latitude, LoadConfig.solar_panel_area]
+
+
+time_config = TimeConfig()
+time_series = TimeSeries()
+wind_config = WindConfig()
+load_config = LoadConfig()
+geo_config = GeoConfig()
+
+weibull_bins = WeibullBins(depends=[wind_config])
+wind_data = WindData(depends=[weibull_bins, time_series, load_config.nr_5mw_tubrines, wind_config.rated_ws])
+wind_distance = WindDistance(depends=[wind_data.speed, wind_data.ts])
+sun_intensity = SunIntensity(depends=[time_series, geo_config.latitude, load_config.solar_panel_area])
 
 
 dataflow = CdsFlowManager(
-    cds_flows=[
-        cls.cds_flow
-        for cls in globals().values()
-        if isinstance(cls, type)
-        and cls is not CdsFlowBase
-        and issubclass(cls, CdsFlowBase)
-        and getattr(cls, "cds_flow", None) is not None
-    ],
+    cds_flows=[time_config, time_series, wind_config, load_config, geo_config, weibull_bins, wind_data, wind_distance, sun_intensity],
     js_dir=_cds_callback_dir,
     tick_ms=33,
     engine_setup="""
@@ -97,21 +97,20 @@ dataflow = CdsFlowManager(
         const ctx = canvas.getContext('2d');
     """,
     engine_code=f"""
-        var engine_ts = [...{TimeSeries.cds_flow.name}.data.{TimeSeries.ts}] 
+        var engine_ts = {time_series.ts.js_input} 
         var last_val = engine_ts[engine_ts.length - 1];
-        engine_ts.push(last_val + {TimeConfig.cds_flow.name}.data.{TimeConfig.dt}[0]);
-        while (engine_ts.length > {TimeConfig.cds_flow.name}.data.{TimeConfig.max_ts}[0]) {{
+        engine_ts.push(last_val + {time_config.dt.js_input});
+        while (engine_ts.length > {time_config.max_ts.js_input}) {{
             engine_ts.shift();
         }}
-        {TimeSeries.cds_flow.name}.data = {{
-            "ts": engine_ts
-        }}
+        {time_series.set_value_str({time_series.ts: "engine_ts"})}
         drawGraphic(
             ctx, 
-            {TimeSeries.cds_flow.name}.data.{TimeSeries.ts}[{TimeSeries.cds_flow.name}.data.{TimeSeries.ts}.length - 1], 
-            {WindDistance.wind_distance.linked_column.js_input},
-            {SunIntensity.cds_flow.name}.data.{SunIntensity.zenith}[{SunIntensity.cds_flow.name}.data.{SunIntensity.zenith}.length - 1], 
+            {time_series.ts.js_data_accessor}[{time_series.ts.js_data_accessor}.length - 1], 
+            {wind_distance.wind_distance.js_input},
+            {sun_intensity.zenith.js_data_accessor}[{sun_intensity.zenith.js_data_accessor}.length - 1], 
         );
+   
     """,
 )
 

@@ -18,6 +18,18 @@ if __name__ == "__main__":
     static_dst = os.path.join(compiled_dir, "static")
 
     try:
+        rendered_pages = render_pages(
+            [
+                HomePage(),
+                AuthorsPage(),
+                HowItsMadePage(),
+                StoryGuidePage(),
+                ResumePage(),
+                EnergySimulationPage(),
+                Jasmin(),
+            ]
+        )
+
         # Move existing compiled_dir contents to tmp_backup
         if os.path.exists(compiled_dir):
             if os.path.exists(tmp_backup):
@@ -30,17 +42,7 @@ if __name__ == "__main__":
         else:
             os.makedirs(compiled_dir)
 
-        rendered_pages = render_pages(
-            [
-                HomePage(),
-                AuthorsPage(),
-                HowItsMadePage(),
-                StoryGuidePage(),
-                ResumePage(),
-                EnergySimulationPage(),
-                Jasmin(),
-            ]
-        )
+
         for endpoint, html in rendered_pages.items():
             out_dir = os.path.join(compiled_dir, endpoint)
             os.makedirs(out_dir, exist_ok=True)
