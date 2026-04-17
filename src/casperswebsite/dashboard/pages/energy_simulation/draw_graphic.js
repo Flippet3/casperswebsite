@@ -164,6 +164,7 @@ function drawGraphic(ctx, ts, wind_distance, zenith, nr_turbines, solar_panel_si
             let col = idx - (row * (row + 1)) / 2;
             // Only draw when col is lower than 2, or higher than row - 2
             if (!(col < 2 || col > row - 2)) continue;
+            if (row > 8) continue;
     
 
             // In each row, # turbines = row+1
