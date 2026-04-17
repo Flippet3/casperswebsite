@@ -262,40 +262,38 @@ function drawGraphic(ctx, ts, wind_distance, zenith, nr_turbines, solar_panel_si
         ctx.restore();
     }
 
-    function drawSolarPanels(x, y, scale = 1) {
+    function drawSolarPanels(x, y, scale = 1, nr_solar_panels) {
         ctx.save();
-        ctx.translate(x, y);
-        ctx.scale(scale, scale);
+        // ctx.translate(x, y);
+        // ctx.scale(scale, scale);
 
-        // Solar panel as a low-base trapezoid
+        // Solar panel as a low-base trapezoid, now drawn upward from the origin
         // Panel dimensions
-        const baseWidth = 64;    // bottom of panel
-        const topWidth = 48;     // top of panel
+        const baseWidth = 64;    // panel base at origin (y=0)
+        const topWidth = 48;     // panel top at y=-height
         const height = 22;
         const cellRows = 2, cellCols = 4;
 
-        // Draw legs/poles
-        ctx.save();
-        ctx.strokeStyle = brightnessAdjustedHSLA(205, 8, 30, 1);
-        ctx.lineWidth = 4;
-        // Poles at 1/4 and 3/4 along the base
-        for (let i of [-0.3, 0.3]) {
-            let px = i * (baseWidth * 0.5);
-            ctx.beginPath();
-            ctx.moveTo(px, height + 2);
-            ctx.lineTo(px, height + 18);
-            ctx.stroke();
-        }
-        ctx.restore();
+        // Draw legs/poles (now go *below* origin, so adjust Y to positive values)
+        // ctx.save();
+        // ctx.strokeStyle = brightnessAdjustedHSLA(205, 8, 30, 1);
+        // ctx.lineWidth = 4;
+        // // Poles at 1/4 and 3/4 along the base (base at origin)
+        // for (let i of [-0.3, 0.3]) {
+        //     let px = i * (baseWidth * 0.5);
+        //     ctx.beginPath();
+        //     ctx.moveTo(px, 2);        // just below origin
+        //     ctx.lineTo(px, 18);       // further below origin
+        //     ctx.stroke();
+        // }
+        // ctx.restore();
 
-        ctx.save();
-
-        // Draw trapezoidal panel frame
+        // Draw trapezoidal panel frame, base at (0,0), top at (0,-height)
         ctx.beginPath();
-        ctx.moveTo(-baseWidth / 2, height);     // Bottom left
-        ctx.lineTo(baseWidth / 2, height);      // Bottom right
-        ctx.lineTo(topWidth / 2, 0);            // Top right
-        ctx.lineTo(-topWidth / 2, 0);           // Top left
+        ctx.moveTo(-baseWidth / 2, 0);          // Bottom left (origin)
+        ctx.lineTo(baseWidth / 2, 0);           // Bottom right (origin)
+        ctx.lineTo(topWidth / 2, -height);      // Top right (upward)
+        ctx.lineTo(-topWidth / 2, -height);     // Top left (upward)
         ctx.closePath();
 
         ctx.fillStyle = brightnessAdjustedHSLA(210, 15, 76, 1); // silvery frame
@@ -304,40 +302,72 @@ function drawGraphic(ctx, ts, wind_distance, zenith, nr_turbines, solar_panel_si
         ctx.fill();
         ctx.stroke();
 
-        // Draw cells as smaller trapezoids inside the panel
-        for (let r = 0; r < cellRows; r++) {
-            for (let c = 0; c < cellCols; c++) {
-                // Linear interpolation on top/bottom widths for left/right of cells
-                let cellPad = 2;
-                let tY1 = height * r / cellRows + cellPad / 2;
-                let tY2 = height * (r + 1) / cellRows - cellPad / 2;
-                // Widths at these Ys
-                let widthAtY1 = topWidth + (baseWidth - topWidth) * (tY1 / height);
-                let widthAtY2 = topWidth + (baseWidth - topWidth) * (tY2 / height);
-                // X extents for this cell
-                let x1 = -widthAtY1 / 2 + (widthAtY1 * c / cellCols) + cellPad / 2;
-                let x2 = -widthAtY1 / 2 + (widthAtY1 * (c + 1) / cellCols) - cellPad / 2;
-                let x3 = -widthAtY2 / 2 + (widthAtY2 * (c + 1) / cellCols) - cellPad / 2;
-                let x4 = -widthAtY2 / 2 + (widthAtY2 * c / cellCols) + cellPad / 2;
-                ctx.beginPath();
-                ctx.moveTo(x1, tY1);
-                ctx.lineTo(x2, tY1);
-                ctx.lineTo(x3, tY2);
-                ctx.lineTo(x4, tY2);
-                ctx.closePath();
+        const interp = (a, b) => a + (b - a) * raw_brightness;
+        // Make the cells a vibrant, electric blue, evocative of energy and power.
+        const h = interp(220, 205);   // Base to more electric blue
+        const s = interp(15, 100);    // High saturation for vibrancy
+        const l = interp(15, 55);     // Medium lightness for intensity
 
-                const interp = (a, b) => a + (b - a) * raw_brightness;
-                // Make the cells a vibrant, electric blue, evocative of energy and power.
-                const h = interp(220, 205);   // Base to more electric blue
-                const s = interp(15, 100);    // High saturation for vibrancy
-                const l = interp(15, 55);     // Medium lightness for intensity
+        ctx.fillStyle = `hsla(${h}, ${s}%, ${l}%, 0.92)`;
+
+        let x_translate = Math.pow(nr_solar_panels, 1/3);
+        let w = Math.ceil(x_translate);
+        let prev_w = w - 1;
+        let full_width_rows = nr_solar_panels - Math.pow(prev_w, 3);
+        // console.log(nr_solar_panels);
+        // console.log(w);
         
-                ctx.fillStyle = `hsla(${h}, ${s}%, ${l}%, 0.92)`;
-                ctx.fill();
-            }
-        }
+        let grid_x_size = 10;
+        let grid_z_size = 0.1;
+        let cell_percentage = 0.8;
+        let grid_origin_x = x;
+        let grid_origin_z = y_to_z(y);
 
-        ctx.restore();
+        let i = 0;
+        while (i < nr_solar_panels) {
+            let gz, gx;
+            if (i <= w * full_width_rows) {
+                gz = Math.floor(i / w);
+                gx = i - gz * w;
+            } else {
+                let j = i - w * full_width_rows;
+                gz = full_width_rows + Math.floor(j / (w - 1));
+                gx = j % (w - 1);
+            }
+    
+            let raw_dx = (gx - x_translate / 2) * grid_x_size;
+            let raw_z = grid_origin_z + gz * grid_z_size;
+
+            // Each cell's "bottom" (closer to origin) and "top" (further upward)
+            let y1 = z_to_y(raw_z);
+            let y2 = z_to_y(raw_z + grid_z_size * cell_percentage);
+
+            // X extents for this cell
+            let x1 = grid_origin_x + (raw_dx) / (raw_z);
+            let x2 = grid_origin_x + (raw_dx + grid_x_size * cell_percentage) / (raw_z);
+            let x3 = grid_origin_x + (raw_dx + grid_x_size * cell_percentage) / (raw_z + grid_z_size * cell_percentage);
+            let x4 = grid_origin_x + (raw_dx) / (raw_z + grid_z_size * cell_percentage);
+
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y1);
+            ctx.lineTo(x3, y2);
+            ctx.lineTo(x4, y2);
+            ctx.closePath();
+            ctx.fill();
+
+            if (i < 1000) {
+                i += 1;
+            } else if (i < 10000) {
+                i += 10;
+            } else if (i < 100000) {
+                i += 100;
+            } else {
+                // Really don't draw too much.
+                i += 10000000;
+            }
+
+        }
         ctx.restore();
     }
 
@@ -361,5 +391,40 @@ function drawGraphic(ctx, ts, wind_distance, zenith, nr_turbines, solar_panel_si
     // Z = 1/(1 - (600 - Y) / 100) = 100 / (100 - (600 - Y)) = 100 / (Y - 500)  // Makes sense, because at Y = 500, we're at inf; at Y = 600; we're at 1.
 
     drawTurbines(325, 570, Math.floor(nr_turbines), 4294967296 * static_rand(), 1, wind_distance / 10);
-    drawSolarPanels(120, 520, 1);
+    drawSolarPanels(120, 570, 1, solar_panel_size);
+
+    // let start_dt = 365.25 * 24 * 3600 / 4 - 6 * 60 * 60
+    // let nr_squares = Math.floor((ts - start_dt)/900);
+    // let w = Math.ceil(Math.pow(nr_squares, 1/3));
+    // let prev_w = w - 1;
+    // let full_width_rows = nr_squares - Math.pow(prev_w, 3);
+    
+    // let square_spacing = 7;
+    // let square_size = 5;
+    // let grid_origin_x = 0;
+    // let grid_origin_y = 0;
+
+    // ctx.save();
+    // for (let i = 0; i < nr_squares; i++) {
+    //     let gy, gx;
+    //     if (i <= w * full_width_rows) {
+    //         gy = Math.floor(i / w);
+    //         gx = i - gy * w;
+    //     } else {
+    //         let j = i - w * full_width_rows;
+    //         gy = full_width_rows + Math.floor(j / (w - 1));
+    //         gx = j % (w - 1);
+    //     }
+
+    //     let x = grid_origin_x + gx * square_spacing;
+    //     let y = grid_origin_y + gy * square_spacing;
+    //     ctx.beginPath();
+    //     ctx.rect(x, y, square_size, square_size);
+    //     ctx.fillStyle = `hsla(220, 80%, 65%, 0.75)`;
+    //     ctx.fill();
+    //     ctx.lineWidth = 1;
+    //     ctx.strokeStyle = `hsla(220, 50%, 35%, 0.25)`;
+    //     ctx.stroke();
+    // }
+    // ctx.restore();
 }
