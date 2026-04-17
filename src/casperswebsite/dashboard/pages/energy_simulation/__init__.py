@@ -114,7 +114,12 @@ class EnergySimulationPage:
                             width=6,
                             embed_type=EmbedType.Html,
                             content=bokeh_divs["nr_wind_turbines_slider"]
-                        )
+                        ),
+                        ContainerInfo(
+                            width=12,
+                            embed_type=EmbedType.Html,
+                            content=bokeh_divs["pause_button"]
+                        ),
                     ],
                 ),
                 CardInfo(

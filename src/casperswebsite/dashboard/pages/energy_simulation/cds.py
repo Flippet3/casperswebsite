@@ -75,12 +75,17 @@ class SunIntensity(CdsFlowBase):
 
     input_type = InputType.Array
 
+# New Pause config with just one boolean value
+class Pause(CdsFlowBase):
+    paused = CdsFlowCol("boolean", [False])
+    input_type = InputType.SingleValue
 
 time_config = TimeConfig()
 time_series = TimeSeries()
 wind_config = WindConfig()
 load_config = LoadConfig()
 geo_config = GeoConfig()
+pause = Pause()
 
 weibull_bins = WeibullBins(depends=[wind_config])
 wind_data = WindData(depends=[weibull_bins, time_series, load_config.nr_5mw_tubrines, wind_config.rated_ws])
@@ -89,7 +94,7 @@ sun_intensity = SunIntensity(depends=[time_series, geo_config.latitude, load_con
 
 
 dataflow = CdsFlowManager(
-    cds_flows=[time_config, time_series, wind_config, load_config, geo_config, weibull_bins, wind_data, wind_distance, sun_intensity],
+    cds_flows=[time_config, time_series, wind_config, load_config, geo_config, pause, weibull_bins, wind_data, wind_distance, sun_intensity],
     js_dir=_cds_callback_dir,
     tick_ms=33,
     engine_setup="""
@@ -97,18 +102,22 @@ dataflow = CdsFlowManager(
         const ctx = canvas.getContext('2d');
     """,
     engine_code=f"""
-        var engine_ts = {time_series.ts.js_input} 
-        var last_val = engine_ts[engine_ts.length - 1];
-        engine_ts.push(last_val + {time_config.dt.js_input});
-        while (engine_ts.length > {time_config.max_ts.js_input}) {{
-            engine_ts.shift();
+        if (!{pause.paused.js_input}) {{
+            var engine_ts = {time_series.ts.js_input} 
+            var last_val = engine_ts[engine_ts.length - 1];
+            engine_ts.push(last_val + {time_config.dt.js_input});
+            while (engine_ts.length > {time_config.max_ts.js_input}) {{
+                engine_ts.shift();
+            }}
+            {time_series.set_value_str({time_series.ts: "engine_ts"})}
         }}
-        {time_series.set_value_str({time_series.ts: "engine_ts"})}
         drawGraphic(
             ctx, 
             {time_series.ts.js_data_accessor}[{time_series.ts.js_data_accessor}.length - 1], 
             {wind_distance.wind_distance.js_input},
             {sun_intensity.zenith.js_data_accessor}[{sun_intensity.zenith.js_data_accessor}.length - 1], 
+            {load_config.nr_5mw_tubrines.js_input}, 
+            {load_config.solar_panel_area.js_input}, 
         );
    
     """,

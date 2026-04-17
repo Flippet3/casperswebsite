@@ -15,8 +15,11 @@ function seededRandom(seed) {
  * @param {CanvasRenderingContext2D} ctx - The canvas 2D rendering context.
  * @param {number} ts - Timestamp.
  * @param {number} wind_distance - Aggregate of wind_speed * time.
+ * @param {number} zenith - Angle of the sun w.r.t. the horizon.
+ * @param {number} nr_turbines - Indicator of how many wind turbines should be drawn.
+ * @param {number} solar_panel_size - Indicator of how many solar panels are activated.
  */
-function drawGraphic(ctx, ts, wind_distance, zenith) {
+function drawGraphic(ctx, ts, wind_distance, zenith, nr_turbines, solar_panel_size) {
     let dt = new Date((ts) * 1000);
     let sun_x_percentage = (dt.getUTCHours() * 3600 + dt.getUTCMinutes() * 60 + dt.getUTCSeconds()) / 86400;
     let sun_y_percentage = zenith;
@@ -37,6 +40,15 @@ function drawGraphic(ctx, ts, wind_distance, zenith) {
 
     }
 
+    function z_to_y(z) {
+        return 100 / z + 500;
+    }
+
+    function y_to_z(y) {
+        return 100 / (y - 500);
+    }
+
+    
     function drawSky() {
         // Sky (top 2/3)
         ctx.fillStyle = brightnessAdjustedHSLA(204, 100, 83, 1); // #a8ddff
@@ -49,32 +61,27 @@ function drawGraphic(ctx, ts, wind_distance, zenith) {
         ctx.fillRect(0, ctx.canvas.height * 5 / 6, ctx.canvas.width, ctx.canvas.height / 6);
     }
 
-    /**
-     * @param {number} x
-     * @param {number} y
-     * @param {number} [scale]
-     * @param {number} [bladeAngle]
-     */
+
     function drawTurbine(x, y, scale=1, bladeAngle=0) {
         ctx.save();
         ctx.translate(x, y);
         ctx.scale(scale, scale);
 
-        // Draw the tower
+        // Draw the tower up from current (x, y) position — base is at origin, tower extends upward
         ctx.save();
         ctx.strokeStyle = brightnessAdjustedHSLA(0, 0, 85, 1); // #d9d9d9
         ctx.fillStyle = brightnessAdjustedHSLA(0, 0, 85, 1);   // #d9d9d9
         ctx.lineWidth = 8;
         ctx.beginPath();
-        ctx.moveTo(0, 30);
-        ctx.lineTo(0, 120); // Tower base point
+        ctx.moveTo(0, 0);     // Tower base at origin
+        ctx.lineTo(0, -90);   // Tower goes upward (negative Y)
         ctx.stroke();
         ctx.restore();
 
         // Hub shadow/outline, for a slight 3D effect
         ctx.save();
         ctx.beginPath();
-        ctx.arc(0, 30, 11, 0, Math.PI * 2, false);
+        ctx.arc(0, -90, 11, 0, Math.PI * 2, false); // Hub at tower top (y = -90)
         ctx.fillStyle = brightnessAdjustedHSLA(0, 0, 69, 1); // #b1b1b1
         ctx.globalAlpha = 0.3;
         ctx.fill();
@@ -83,7 +90,7 @@ function drawGraphic(ctx, ts, wind_distance, zenith) {
         // Draw the hub
         ctx.save();
         ctx.beginPath();
-        ctx.arc(0, 30, 9, 0, Math.PI * 2, false);
+        ctx.arc(0, -90, 9, 0, Math.PI * 2, false);
         ctx.fillStyle = brightnessAdjustedHSLA(0, 0, 93, 1); // #eeeeee
         ctx.shadowColor = brightnessAdjustedHSLA(192, 68, 83, 1); // #b5e0f1
         ctx.shadowBlur = 2;
@@ -93,8 +100,8 @@ function drawGraphic(ctx, ts, wind_distance, zenith) {
         // Draw the blades
         for (let i = 0; i < 3; i++) {
             ctx.save();
-            // Center at turbine hub
-            ctx.translate(0, 30);
+            // Center at turbine hub (top of tower)
+            ctx.translate(0, -90);
             // Set angle for blade: 3 equally spaced
             let angle = bladeAngle + i * (2 * Math.PI / 3);
             ctx.rotate(angle);
@@ -122,6 +129,63 @@ function drawGraphic(ctx, ts, wind_distance, zenith) {
         }
 
         ctx.restore();
+    }
+
+    /**
+     * Draws a "cone" of wind turbines, with row/col calculated directly per index.
+     * Each row has r+1 turbines; row computed by: row = floor((sqrt(8*idx+1)-1)/2).
+     * Column is idx - (row*(row+1))/2.
+     * Draws back-to-front for proper overlap. Blade jitter is deterministic per idx.
+     */
+    function drawTurbines(x, y, nr_turbines, seed, scale=1, bladeAngle=0) {
+        if (y < 500 || y > 600) return;
+
+        // Draw from max index (furthest/backmost) to 0 (nearest/frontmost)
+        // so that foreground turbines overlap background ones
+        let z_zero = y_to_z(y);
+        let z_step = 1;
+        let spread = 50 / (z_zero/(z_zero+z_step));
+
+        // Prepare deterministic random jitter for each turbine
+        let perTurbineRand = seededRandom(seed);
+
+        // To ensure deterministic jitter, generate and cache all jitters front-to-back
+        let jitters = [];
+        for (let i = 0; i < nr_turbines; i++) {
+            jitters[i] = (perTurbineRand() - 0.5) * Math.PI;
+        }
+
+        // Draw backmost (largest idx) to frontmost (idx=0)
+        for (let idx = nr_turbines - 1; idx >= 0; idx--) {
+        // for (let idx = 0; idx <= 0; idx++) {
+            // Row: floor((sqrt(8*idx+1)-1)/2)
+            let row = Math.floor((Math.sqrt(8 * idx + 1) - 1) / 2);
+            // Column within row
+            let col = idx - (row * (row + 1)) / 2;
+            // Only draw when col is lower than 2, or higher than row - 2
+            if (!(col < 2 || col > row - 2)) continue;
+    
+
+            // In each row, # turbines = row+1
+            let in_this_row = row + 1;
+            let row_z = z_zero + z_step * row;
+            let row_y = z_to_y(row_z);
+            let turbine_scale = scale * (z_zero/row_z)
+            let row_spread = row * spread * (z_zero/row_z);
+
+            // Evenly space across the row
+            let fx = (in_this_row === 1)
+                ? 0
+                : (-row_spread / 2) + (row_spread * col / (in_this_row - 1));
+            let tx = x + fx;
+
+            drawTurbine(
+                tx,
+                row_y,
+                turbine_scale,
+                bladeAngle + jitters[idx]
+            );
+        }
     }
 
     function drawCloud(seed) {
@@ -286,7 +350,15 @@ function drawGraphic(ctx, ts, wind_distance, zenith) {
         drawCloud(Math.floor(4294967296 * static_rand()));
     }
 
-    const rand = seededRandom(ts);
-    drawTurbine(325, 450, 1, wind_distance / 10);
+    // Distance rules on the ground. 
+    // 500 is infinitely far away.
+    // 600 is at a scale of 1.
+    // This means that scale at Y:
+    // Frac to top of screen = Y_P = ((600 - 500) - (Y - 500)) / (600 - 500)
+    // Scale = Z = 1/(1-Y_P)  // When Y_P = 0 (Y=600), we're at 1, when Y_P = 1 (Y=500), we're at infinite.
+    // Y_P = (600 - 500 - Y + 500) / (600 - 500) = (600 - Y) / 100
+    // Z = 1/(1 - (600 - Y) / 100) = 100 / (100 - (600 - Y)) = 100 / (Y - 500)  // Makes sense, because at Y = 500, we're at inf; at Y = 600; we're at 1.
+
+    drawTurbines(325, 570, Math.floor(nr_turbines), 4294967296 * static_rand(), 1, wind_distance / 10);
     drawSolarPanels(120, 520, 1);
 }

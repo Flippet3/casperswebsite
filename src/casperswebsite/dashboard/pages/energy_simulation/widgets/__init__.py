@@ -1,9 +1,9 @@
 import math
 from bokeh.models.dom import DOMElement
-from bokeh.models import CustomJS, Slider
+from bokeh.models import CustomJS, Slider, Button
 from bokeh.models.formatters import CustomJSTickFormatter
 
-from casperswebsite.dashboard.pages.energy_simulation.cds import load_config
+from casperswebsite.dashboard.pages.energy_simulation.cds import load_config, pause
 
 
 def get_widgets() -> dict[str, DOMElement]:
@@ -34,4 +34,17 @@ def get_widgets() -> dict[str, DOMElement]:
         ),
     )
 
-    return {"solar_panel_area_slider": solar_panel_area_slider, "nr_wind_turbines_slider": nr_wind_turbines_slider}
+    pause_button = Button(label="Pause", button_type="primary")
+    pause_button.js_on_click(
+        CustomJS(
+            args={pause.name: pause.source},
+            code=f"""{pause.set_value_str({pause.paused: "[!" + pause.paused.js_input + "]"})}""",
+       
+        ),
+    )
+
+    return {
+        "solar_panel_area_slider": solar_panel_area_slider,
+        "nr_wind_turbines_slider": nr_wind_turbines_slider,
+        "pause_button": pause_button,
+    }
