@@ -311,30 +311,47 @@ function drawGraphic(ctx, ts, wind_distance, zenith, nr_turbines, solar_panel_si
 
         ctx.fillStyle = `hsla(${h}, ${s}%, ${l}%, 0.92)`;
 
-        let i = 0;
-        while (i < nr_solar_panels) {
+        function i_to_gx_gz(input_i) {
             let gz, gx;
-            if (Math.floor(i) <= w * full_width_rows) {
-                gz = Math.floor(Math.floor(i) / w);
-                gx = Math.floor(i) - gz * w;
+            if (Math.floor(input_i) <= w * full_width_rows) {
+                gz = Math.floor(Math.floor(input_i) / w);
+                gx = Math.floor(input_i) - gz * w;
             } else {
-                let j = Math.floor(i) - w * full_width_rows;
-                gz = full_width_rows + Math.floor(j / (w - 1));
+                let j = Math.floor(input_i) - w * full_width_rows;
+                gz = Math.floor(full_width_rows + (j / (w - 1)));
                 gx = Math.floor(j % (w - 1));
+            }
+            return [gx, gz];
+        }
+
+        let i = 0;
+        let stride = 0;
+        let rows_left = 3;
+        while (i < nr_solar_panels) {
+            let [gx, gz] = i_to_gx_gz(i);
+            if (gx == 0) {
+                rows_left -= 1;
+                i += stride * w
+                i -= i_to_gx_gz(i)[0] // Manage shorter columns.
+                if (rows_left < 0) {
+                    rows_left = 3;
+                    stride = Math.max(1, stride * 2);
+                }
             }
     
             let raw_dx = (gx - x_translate / 2) * grid_x_size;
+            let cell_width = grid_x_size * cell_percentage;
             let raw_z = grid_origin_z + gz * grid_z_size;
+            let z_size = (grid_z_size * cell_percentage) + grid_z_size * stride;
 
-            let increment = 1 + Math.pow(Math.max(0, i/1000), 2) * 0.05;
-            let z_size = (grid_z_size * cell_percentage) * increment; // Correct for drawing less cells.
+            
             let y1 = z_to_y(raw_z);
             let y2 = z_to_y(raw_z + z_size);
 
             // X extents for this cell
             let x1 = grid_origin_x + (raw_dx) / (raw_z);
-            let x2 = grid_origin_x + (raw_dx + grid_x_size * cell_percentage) / (raw_z);
-            let x3 = grid_origin_x + (raw_dx + grid_x_size * cell_percentage) / (raw_z + z_size);
+            let x2 = grid_origin_x + (raw_dx + cell_width) / (raw_z);
+            let x3 = grid_origin_x + (raw_dx + cell_width) / (raw_z + z_size);
             let x4 = grid_origin_x + (raw_dx) / (raw_z + z_size);
 
             ctx.beginPath();
@@ -345,7 +362,7 @@ function drawGraphic(ctx, ts, wind_distance, zenith, nr_turbines, solar_panel_si
             ctx.closePath();
             ctx.fill();
 
-            i += increment;
+            i += 1;
         }
         ctx.restore();
     }
