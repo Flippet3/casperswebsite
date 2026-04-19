@@ -386,7 +386,7 @@ function drawGraphic(ctx, ts, wind_distance, zenith, nr_turbines, solar_panel_si
     // Y_P = (600 - 500 - Y + 500) / (600 - 500) = (600 - Y) / 100
     // Z = 1/(1 - (600 - Y) / 100) = 100 / (100 - (600 - Y)) = 100 / (Y - 500)  // Makes sense, because at Y = 500, we're at inf; at Y = 600; we're at 1.
 
-    drawTurbines(325, 570, Math.floor(nr_turbines), 4294967296 * static_rand(), 1, wind_distance / 10);
+    drawTurbines(325, 570, Math.floor(nr_turbines), 4294967296 * static_rand(), 0.6, wind_distance / 10);
     drawSolarPanels(120, 580, 1, solar_panel_size);
 
     // let start_dt = 365.25 * 24 * 3600 / 4 - 6 * 60 * 60
