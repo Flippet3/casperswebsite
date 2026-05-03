@@ -11,7 +11,7 @@ def get_widgets() -> dict[str, DOMElement]:
         title="Solar panel area (m^2)",
         start=0,
         end=6,
-        value=math.log10(load_config.solar_panel_area.initial_value[0]),
+        value=math.log10(load_config.solar_panel_area.initial_value),
         step=0.1,
         format=CustomJSTickFormatter(code="return Math.round(Math.pow(10, tick));"),
     )
@@ -24,7 +24,7 @@ def get_widgets() -> dict[str, DOMElement]:
     )
 
     nr_wind_turbines_slider = Slider(
-        title="Nr wind Turbines (5MW)", start=0, end=3, value=math.log10(load_config.nr_5mw_tubrines.initial_value[0]), step=0.1, format=CustomJSTickFormatter(code="return Math.round(Math.pow(10, tick));")
+        title="Nr wind Turbines (5MW)", start=0, end=3, value=math.log10(load_config.nr_5mw_tubrines.initial_value), step=0.1, format=CustomJSTickFormatter(code="return Math.round(Math.pow(10, tick));")
     )
     nr_wind_turbines_slider.js_on_change(
         "value",

@@ -14,8 +14,8 @@ START_DT = 365.25 * 24 * 3600 / 4 - 6 * 60 * 60
 
 
 class TimeConfig(CdsFlowBase):
-    dt = CdsFlowCol("number", [900])
-    max_ts = CdsFlowCol("number", [24 * 4 * 2])
+    dt = CdsFlowCol("number", 900)
+    max_ts = CdsFlowCol("number", 24 * 4 * 2)
     input_type = InputType.SingleValue
 
 
@@ -25,18 +25,18 @@ class TimeSeries(CdsFlowBase):
 
 
 class WindConfig(CdsFlowBase):
-    A = CdsFlowCol("number", [8])
-    k = CdsFlowCol("number", [2])
-    min_bin = CdsFlowCol("number", [0])
-    max_bin = CdsFlowCol("number", [30])
-    nr_bins = CdsFlowCol("number", [40])
-    rated_ws = CdsFlowCol("number", [11])
+    A = CdsFlowCol("number", 8)
+    k = CdsFlowCol("number", 2)
+    min_bin = CdsFlowCol("number", 0)
+    max_bin = CdsFlowCol("number", 30)
+    nr_bins = CdsFlowCol("number", 40)
+    rated_ws = CdsFlowCol("number", 11)
     input_type = InputType.SingleValue
 
 
 class LoadConfig(CdsFlowBase):
-    solar_panel_area = CdsFlowCol("number", [100000])
-    nr_5mw_tubrines = CdsFlowCol("number", [100])
+    solar_panel_area = CdsFlowCol("number", 100000)
+    nr_5mw_tubrines = CdsFlowCol("number", 100)
     input_type = InputType.SingleValue
 
 
@@ -87,27 +87,27 @@ class SunPlot(CdsFlowBase):
 
 
 class ColorConfig(CdsFlowBase):
-    today_line_color = CdsFlowCol("string", ["#FF1744"])
-    yesterday_line_color = CdsFlowCol("string", ["#B0B0B0"])
+    today_line_color = CdsFlowCol("string", "#FF1744")
+    yesterday_line_color = CdsFlowCol("string", "#B0B0B0")
     input_type = InputType.SingleValue
 
 
 class WindDistance(CdsFlowBase):
-    wind_distance = CdsFlowCol("number", [0])
-    watermark = CdsFlowCol("number", [0])
+    wind_distance = CdsFlowCol("number", 0)
+    watermark = CdsFlowCol("number", 0)
 
     input_type = InputType.SingleValue
 
 
 class GeoConfig(CdsFlowBase):
-    latitude = CdsFlowCol("number", [50])
+    latitude = CdsFlowCol("number", 50)
 
     input_type = InputType.SingleValue
 
 
 # New Pause config with just one boolean value
 class Pause(CdsFlowBase):
-    paused = CdsFlowCol("boolean", [False])
+    paused = CdsFlowCol("boolean", False)
     input_type = InputType.SingleValue
 
 

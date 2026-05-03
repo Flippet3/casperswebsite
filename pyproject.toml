@@ -7,7 +7,7 @@ requires-python = ">=3.11"
 dependencies = [
     "bokeh==3.9.0",
     "pydantic==2.12.5",
-    "bokeh-cdsflow>=0.1.0",
+    "bokeh-cdsflow>=0.2.0",
 ]
 
 [tool.uv.sources]
