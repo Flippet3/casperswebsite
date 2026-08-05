@@ -1,5 +1,6 @@
 import os
 import shutil
+from urllib.parse import quote
 from casperswebsite.dashboard.pages.authors_page import AuthorsPage
 from casperswebsite.dashboard.pages.energy_simulation import EnergySimulationPage
 from casperswebsite.dashboard.pages.home import HomePage
@@ -52,6 +53,22 @@ if __name__ == "__main__":
                     f.write(html)
             with open(out_path, "w", encoding="utf-8") as f:
                 f.write(html)
+
+        # Redirect the accent-free /Resume to the real /Résumé page
+        resume_target = "/" + quote("Résumé") + "/"
+        redirect_dir = os.path.join(compiled_dir, "Resume")
+        os.makedirs(redirect_dir, exist_ok=True)
+        with open(os.path.join(redirect_dir, "index.html"), "w", encoding="utf-8") as f:
+            f.write(
+                "<!DOCTYPE html>\n"
+                '<html lang="en">\n<head>\n<meta charset="utf-8">\n'
+                f'<meta http-equiv="refresh" content="0; url={resume_target}">\n'
+                f'<link rel="canonical" href="{resume_target}">\n'
+                "<title>Résumé</title>\n</head>\n<body>\n"
+                f'<p>Redirecting to <a href="{resume_target}">Résumé</a>…</p>\n'
+                f'<script>window.location.replace("{resume_target}");</script>\n'
+                "</body>\n</html>\n"
+            )
 
         # Symlink compiled/static to src/casperswebsite/static
         # Remove any existing file or symlink first
